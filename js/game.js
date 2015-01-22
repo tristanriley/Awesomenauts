@@ -39,6 +39,10 @@ var game = {
 
 	// Run on game resources loaded.
 	"loaded" : function () {
+		//adds player to pool of entities we can use
+		me.pool.register("player", game.PlayerEntity, true);
+		//anything registered with true can have multiple instances of
+
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 
