@@ -14,10 +14,9 @@ game.PlayerEntity = me.Entity.extend({
 
 			}
 		}]);
-
+		//sets characters velocity on x and y axis
 		this.body.setVelocity(5, 20);
 
-		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
 
 	},
 
@@ -28,6 +27,8 @@ game.PlayerEntity = me.Entity.extend({
 			//setVelocity() and multiplying it by me.timer.tick
 			//me.timer.tick makes the movement smooth
 			this.body.vel.x += this.body.accel.x * me.timer.tick;
+			//lets program use the walk animation
+		this.renderable.setCurrentAnimation("walk");
 		}else{
 			//makes it so that character stops moving when key is not pressed
 			this.body.vel.x = 0;
