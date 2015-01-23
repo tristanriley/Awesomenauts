@@ -14,9 +14,26 @@ game.PlayerEntity = me.Entity.extend({
 
 			}
 		}]);
+
+		this.body.setVelocity(5, 20);
+
+		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
+
 	},
 
-	update: function(){
-
+	update: function(delta){
+		//adds if/else so that the caharacter will mve when key is pressed
+		if (me.input.isKeyPressed("right")) {
+			//adds to the postition of x by the velocity defined above in 
+			//setVelocity() and multiplying it by me.timer.tick
+			//me.timer.tick makes the movement smooth
+			this.body.vel.x += this.body.accel.x * me.timer.tick;
+		}else{
+			//makes it so that character stops moving when key is not pressed
+			this.body.vel.x = 0;
+		}
+		//shows updated position on screen
+		this.body.update(delta);
+		return true;
 	}
 });
