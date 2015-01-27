@@ -16,6 +16,8 @@ game.PlayerEntity = me.Entity.extend({
 		}]);
 		//sets characters velocity on x and y axis
 		this.body.setVelocity(5, 20);
+		//follows player with screen so we can see him
+		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 
 		//adds animation when character is idle
 		this.renderable.addAnimation("idle", [78]);
@@ -83,14 +85,20 @@ game.PlayerBaseEntity = me.Entity.extend({
 			this.body.onCollision = this.onCollision.bind(this);
 
 			this.type = "PlayerBaseEntity";
+			//shows animation of base not burning
+			this.renderable.addAnimation("idle", [0]);
+			this.renderable.addAnimation("broken", [1]);
+			this.renderable.setCurrentAnimation("idle");
 	},
 	//function that updates state of the tower
 	update:function(delta){
 		//breaks tower when health is 0 or less
 		if(this.health<=0){
 			this.broken = true; 
+			//sets animation to burning tower when it breaks
+			this.renderable.setCurrentAnimation("broken");
 		}
-		this.body,update(delta);
+		this.body.update(delta);
 		//updates state of tower
 		this._super(me.Entity, "update", [delta]);
 		return true;
@@ -125,14 +133,21 @@ game.EnemyBaseEntity = me.Entity.extend({
 			this.body.onCollision = this.onCollision.bind(this);
 
 			this.type = "EnemyBaseEntity";
+			//shows animation of base not burning
+			this.renderable.addAnimation("idle", [0]);
+			this.renderable.addAnimation("broken", [1]);
+			this.renderable.setCurrentAnimation("idle");
 	},
 	//function that updates state of the tower
 	update:function(delta){
 		//breaks tower when health is 0 or less
 		if(this.health<=0){
-			this.broken = true; 
+			this.broken = true;
+			//sets image as burrning when broken
+			this.renderable.setCurrentAnimation("broken"); 
+			//renderable is a class made in mealonjs that allows us to change animation
 		}
-		this.body,update(delta);
+		this.body.update(delta);
 		//updates state of tower
 		this._super(me.Entity, "update", [delta]);
 		return true;

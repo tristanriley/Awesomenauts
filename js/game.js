@@ -42,6 +42,10 @@ var game = {
 		//adds player to pool of entities we can use
 		me.pool.register("player", game.PlayerEntity, true);
 		//anything registered with true can have multiple instances of
+		//adds player base to pool of entities we can use
+		me.pool.register("PlayerBase", game.PlayerBaseEntity);
+		//adds enemy base to pool of entities we can use
+		me.pool.register("EnemyBase", game.EnemyBaseEntity)
 
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
