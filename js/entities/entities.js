@@ -58,3 +58,87 @@ game.PlayerEntity = me.Entity.extend({
 		return true;
 	}
 });
+
+//function for player tower
+game.PlayerBaseEntity = me.Entity.extend({
+	init : function(x, y, settings){
+			this._super(me.Entity, 'init', [x, y, {
+				image: "tower",
+				width: 100,
+				height: 100,
+				spriteheight: "100",
+				spriteheight: "100",
+				getShape: function(){
+					return(new me.Rect(0, 0, 100, 100)).toPolygon();
+				}
+
+			}]);
+			//give variable for when tower is not broken
+			this.broken = false;
+			//gives tower health
+			this.health = 10;
+			//updates tower wether or not looking at it
+			this.alwaysUpdate = true;
+			//entities will be able to collide with tower
+			this.body.onCollision = this.onCollision.bind(this);
+
+			this.type = "PlayerBaseEntity";
+	},
+	//function that updates state of the tower
+	update:function(delta){
+		//breaks tower when health is 0 or less
+		if(this.health<=0){
+			this.broken = true; 
+		}
+		this.body,update(delta);
+		//updates state of tower
+		this._super(me.Entity, "update", [delta]);
+		return true;
+	},
+
+	onCollision: function(){
+
+	}
+});
+
+//function for enemy tower
+game.EnemyBaseEntity = me.Entity.extend({
+	init : function(x, y, settings){
+			this._super(me.Entity, 'init', [x, y, {
+				image: "tower",
+				width: 100,
+				height: 100,
+				spriteheight: "100",
+				spriteheight: "100",
+				getShape: function(){
+					return(new me.Rect(0, 0, 100, 100)).toPolygon();
+				}
+
+			}]);
+			//give variable for when tower is not broken
+			this.broken = false;
+			//gives tower health
+			this.health = 10;
+			//updates tower wether or not looking at it
+			this.alwaysUpdate = true;
+			//entities will be able to collide with tower
+			this.body.onCollision = this.onCollision.bind(this);
+
+			this.type = "EnemyBaseEntity";
+	},
+	//function that updates state of the tower
+	update:function(delta){
+		//breaks tower when health is 0 or less
+		if(this.health<=0){
+			this.broken = true; 
+		}
+		this.body,update(delta);
+		//updates state of tower
+		this._super(me.Entity, "update", [delta]);
+		return true;
+	},
+
+	onCollision: function(){
+
+	}
+});

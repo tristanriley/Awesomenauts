@@ -4,10 +4,14 @@ game.resources = [
 	 * @example
 	 * {name: "example", type:"image", src: "data/img/example.png"},
 	 */
-
+//loads reource for background tiles
 {name: "background-tiles", type:"image", src: "data/img/background-tiles.png"},	 
+//loads resource for meta tiles
 {name: "meta-tiles", type:"image", src: "data/img/meta-tiles.png"},
+//loads resource for player
 {name: "player", type:"image", src: "data/img/orcSpear.png"},
+//loads resource for tower
+{name: "tower", type:"image", src: "data/img/tower_round.svg.png"},
 
 	/* Atlases 
 	 * @example
