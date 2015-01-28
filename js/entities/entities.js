@@ -25,6 +25,8 @@ game.PlayerEntity = me.Entity.extend({
 		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
 		//sets character image when we start game
 		this.renderable.setCurrentAnimation("idle");
+		//adds animations for attacking
+		this.renderable.addAnimation("attack", [65, 66, 67, 68, 70, 71, 72], 80);
 
 	},
 
@@ -41,8 +43,19 @@ game.PlayerEntity = me.Entity.extend({
 			//makes it so that character stops moving when key is not pressed
 			this.body.vel.x = 0;
 		}
+
+		if(me.input.isKeyPressed("attack")){
+			if(!this.renderable.isCurrentAnimation("attack")){
+				//sets current animation to attack and once that is over goes back to idle animation
+				this.renderable.setCurrentAnimation("attack", "idle");
+				//makes it so next time sequence is started we begin
+				//from the first animation not the one we left off at
+				this.renderable.setAnimationFrame();
+			}
+
+		}
 	//makes is so player does not stat out walking
-	if(this.body.vel.x !== 0){
+	else if(this.body.vel.x !== 0){
 		//if statement that makes character walk
 		if (!this.renderable.isCurrentAnimation("walk")) {
 			//lets program use every walk animation
@@ -52,6 +65,16 @@ game.PlayerEntity = me.Entity.extend({
 	}else{
 		this.renderable.setCurrentAnimation("idle");
 	}
+		if(me.input.isKeyPressed("attack")){
+			if(!this.renderable.isCurrentAnimation("attack")){
+				//sets current animation to attack and once that is over goes back to idle animation
+				this.renderable.setCurrentAnimation("attack", "idle");
+				//makes it so next time sequence is started we begin
+				//from the first animation not the one we left off at
+				this.renderable.setAnimationFrame();
+			}
+
+		}
 
 		//shows updated position on screen
 		this.body.update(delta);
