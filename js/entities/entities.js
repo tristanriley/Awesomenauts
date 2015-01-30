@@ -39,10 +39,20 @@ game.PlayerEntity = me.Entity.extend({
 			this.body.vel.x += this.body.accel.x * me.timer.tick;
 			//flips walking animation
 			this.flipX(true);
+
+		}else if (me.input.isKeyPressed("left")){
+			this.body.vel.x -= this.body.accel.x * me.timer.tick;
+			//flips blayer back so it is facing left
+			this.flipX(false);
 		}else{
 			//makes it so that character stops moving when key is not pressed
 			this.body.vel.x = 0;
 		}
+
+		if (me.input.isKeyPressed("jump") && !this.body.jumping && !this.body.falling) {
+			this.body.jumping = true;
+			this.body.vel.y -= this.body.accel.y * me.timer.tick;
+		};
 
 		if(me.input.isKeyPressed("attack")){
 			if(!this.renderable.isCurrentAnimation("attack")){
@@ -94,7 +104,7 @@ game.PlayerBaseEntity = me.Entity.extend({
 				spriteheight: "100",
 				spriteheight: "100",
 				getShape: function(){
-					return(new me.Rect(0, 0, 100, 100)).toPolygon();
+					return(new me.Rect(0, 0, 75, 75)).toPolygon();
 				}
 
 			}]);
@@ -142,7 +152,7 @@ game.EnemyBaseEntity = me.Entity.extend({
 				spriteheight: "100",
 				spriteheight: "100",
 				getShape: function(){
-					return(new me.Rect(0, 0, 100, 100)).toPolygon();
+					return(new me.Rect(0, 0, 75, 75)).toPolygon();
 				}
 
 			}]);
