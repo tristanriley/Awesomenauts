@@ -16,6 +16,8 @@ game.PlayerEntity = me.Entity.extend({
 		}]);
 		//sets characters velocity on x and y axis
 		this.body.setVelocity(5, 20);
+		//keep track of which direction your character is going
+		this.facing = "right";
 		//follows player with screen so we can see him
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 
@@ -37,11 +39,15 @@ game.PlayerEntity = me.Entity.extend({
 			//setVelocity() and multiplying it by me.timer.tick
 			//me.timer.tick makes the movement smooth
 			this.body.vel.x += this.body.accel.x * me.timer.tick;
+			//keep track of which direction your character is going
+			this.facing = "right";
 			//flips walking animation
 			this.flipX(true);
 
 		}else if (me.input.isKeyPressed("left")){
 			this.body.vel.x -= this.body.accel.x * me.timer.tick;
+			//keep track of which direction your character is going
+			this.facing = "left";
 			//flips blayer back so it is facing left
 			this.flipX(false);
 		}else{
@@ -86,11 +92,34 @@ game.PlayerEntity = me.Entity.extend({
 
 		}
 
+		//passing perameter into function with info about player condition
+		me.collision.check(this, true, this.collideHandler.bind(this), true);
 		//shows updated position on screen
 		this.body.update(delta);
 		//lets animation update on fly
 		this._super(me.Entity, "update", [delta]);
 		return true;
+	},
+
+	collideHandler: function(response){
+		if(response.b.type==='EnemyBaseEntity'){
+			var ydif = this.pos.y - response.b.pos.y;
+			var xdif = this.pos.x - response.b.pos.x;
+			//keeps player from glitching into the base from the left
+			if(xdif>-50 && this.facing==='right' && (xdif<0)){
+				//stops player velocity
+				this.body.vel.x = 0;
+				//pushes player back
+				this.pos.x = this.pos.x -1;
+			//keeps player from glitching into the base from the right
+			}else if(xdif<60 && this.facing==='left' && (xdif>0)){
+				//stops player velocity
+				this.body.vel.x = 0;
+				//pushes player back
+				this.pos.x = this.pos.x +1;
+
+			}
+		}
 	}
 });
 
