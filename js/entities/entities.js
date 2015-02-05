@@ -18,6 +18,10 @@ game.PlayerEntity = me.Entity.extend({
 		this.body.setVelocity(5, 20);
 		//keep track of which direction your character is going
 		this.facing = "right";
+		//make hit only count as 1
+		this.now = new Date().getTime();
+		this.lastHit = this.now;
+		this.lastAttck = new Date().getTime();
 		//follows player with screen so we can see him
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 
@@ -33,6 +37,7 @@ game.PlayerEntity = me.Entity.extend({
 	},
 
 	update: function(delta){
+		this.now = new Date().getTime();
 		//adds if/else so that the caharacter will mve when key is pressed
 		if (me.input.isKeyPressed("right")) {
 			//adds to the postition of x by the velocity defined above in 
@@ -71,26 +76,18 @@ game.PlayerEntity = me.Entity.extend({
 
 		}
 	//makes is so player does not stat out walking
-	else if(this.body.vel.x !== 0){
+	else if(this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")){
 		//if statement that makes character walk
 		if (!this.renderable.isCurrentAnimation("walk")) {
 			//lets program use every walk animation
 			this.renderable.setCurrentAnimation("walk");
 		}
 		//player stops walking when key is not presseed
-	}else{
+		//player will do entire attack motion when a is pressed
+	}else if(!this.renderable.isCurrentAnimation("attack")){
 		this.renderable.setCurrentAnimation("idle");
 	}
-		if(me.input.isKeyPressed("attack")){
-			if(!this.renderable.isCurrentAnimation("attack")){
-				//sets current animation to attack and once that is over goes back to idle animation
-				this.renderable.setCurrentAnimation("attack", "idle");
-				//makes it so next time sequence is started we begin
-				//from the first animation not the one we left off at
-				this.renderable.setAnimationFrame();
-			}
 
-		}
 
 		//passing perameter into function with info about player condition
 		me.collision.check(this, true, this.collideHandler.bind(this), true);
@@ -122,6 +119,14 @@ game.PlayerEntity = me.Entity.extend({
 				//pushes player back
 				this.pos.x = this.pos.x +1;
 
+			}
+			//checks if current animation is attack the runs function
+			//checks if it has been 1000 miliseconds since last attack so it dosent happen over again
+			if(!this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
+				
+				this.lastHit = this.now;
+				//base losses health when attacked
+				response.b.loseHealth();
 			}
 		}
 	}
@@ -221,5 +226,9 @@ game.EnemyBaseEntity = me.Entity.extend({
 
 	onCollision: function(){
 
+	},
+
+	loseHealth: function(){
+		this.health--;
 	}
 });
