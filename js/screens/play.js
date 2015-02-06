@@ -11,6 +11,9 @@ game.PlayScreen = me.ScreenObject.extend({
 		var player = me.pool.pull("player", 0, 420, {});
 		//puts player in a position on screen, higher layer = appears first
 		me.game.world.addChild(player, 5);
+		//creates gamemanager variable
+		var gamemanager = me.pool.pull("GameManeger", 0, 0, {});
+		me.game.world.addChild(gamemanager, 0);
 		//character moves right when right key is pressed
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
 		//character moves left when left key is pressed

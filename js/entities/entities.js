@@ -236,11 +236,14 @@ game.EnemyBaseEntity = me.Entity.extend({
 game.EnemyCreep = me.Entity.extend({
 	init: function(x, y, settings){
 		this._super(me.Entity, 'init', [x, y, {
+			//sets image for creep
 			image: "creep1",
+			//sets height and width for creep
 			width: 32,
 			height: 64,
 			spriteheight: "32",
 			spriteheight: "64",
+			//makes object a polygon that is 32 by 64
 			getShape: function(){
 				return(new me.Rect(0, 0, 32, 64)).toPolygon();
 			}
@@ -250,7 +253,7 @@ game.EnemyCreep = me.Entity.extend({
 	//updates health and position of creep
 	this.alwaysUpdate = true;
 
-	this.setVelocity(3, 20);
+	this.set.Velocity(3, 20);
 
 	this.type = "EnemyCreep";
 
@@ -266,3 +269,24 @@ game.EnemyCreep = me.Entity.extend({
 	}
 });
 
+game.GameManeger = Object.extend({
+		init: function(x, y, settings){
+			//sets time of last creeper creation
+			this.now = new Date().getTime();
+			this.lastCreep = new Date().getTime;
+		
+			this.alwaysUpdate = true;
+		},
+
+		update: function(){
+			this.now = new Date().getTime();
+
+			//adds creep to world after a second
+			if(Math.round(this.now/100)%10 ===0 && (this.now - this.lastCreep >= 1000)){
+				this.lastCreep = this.now;
+				var creepe = me.pool.pull("EnemyCreep", 1000, 0, {});
+				me.game.world.addChild(creepe, 5);
+			}
+			return true;
+		}
+});

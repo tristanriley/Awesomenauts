@@ -48,6 +48,8 @@ var game = {
 		me.pool.register("EnemyBase", game.EnemyBaseEntity);
 		//adds enemy creep to pool of entities we can use
 		me.pool.register("EnemyCreep", game.EnemyCreep, true);
+		//adds game manager to pool of entities we can use
+		me.pool.register("GameManeger", game.GameManeger);
 
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
