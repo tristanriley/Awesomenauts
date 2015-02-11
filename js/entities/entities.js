@@ -155,7 +155,7 @@ game.PlayerBaseEntity = me.Entity.extend({
 			//entities will be able to collide with tower
 			this.body.onCollision = this.onCollision.bind(this);
 
-			this.type = "PlayerBaseEntity";
+			this.type = "PlayerBase";
 			//shows animation of base not burning
 			this.renderable.addAnimation("idle", [0]);
 			this.renderable.addAnimation("broken", [1]);
@@ -174,6 +174,11 @@ game.PlayerBaseEntity = me.Entity.extend({
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
+
+	loseHealth: function(){
+		this.health = this.health - damage;
+	},
+
 
 	onCollision: function(){
 
@@ -241,19 +246,28 @@ game.EnemyCreep = me.Entity.extend({
 			//sets height and width for creep
 			width: 32,
 			height: 64,
-			spriteheight: "32",
+			spritewidth: "32",
 			spriteheight: "64",
 			//makes object a polygon that is 32 by 64
 			getShape: function(){
-				return(new me.Rect(0, 0, 32, 64)).toPolygon();
+				return(new me.Rect(200, 0, 32, 64)).toPolygon();
 			}
 		}]);
 	//gives creep 10 health
 	this.health = 10;
 	//updates health and position of creep
 	this.alwaysUpdate = true;
-
-	this.set.Velocity(3, 20);
+	//lets us know if the enemy is currently attacking
+	this.attacking = false;
+	//refreshes enemy
+	this.lastAttacking = new Date().getTime();
+	//keeps track of when creep last attacks
+	this.lastHit = new Date().getTime();
+	//keeps track of when creep last hits
+	this.lastHit = new Date().getTime();
+	this.now = new Date().getTime();
+	//give the creep a speed
+	this.body.setVelocity(3, 20);
 
 	this.type = "EnemyCreep";
 
@@ -265,21 +279,47 @@ game.EnemyCreep = me.Entity.extend({
 
 
 	update: function(delta){
-		this.body,vel.x -= this.accel.x * me.timer.tick;
+		//refreshes enemy
+		this.now = new Date().getTime();
+
+		this.body.vel.x -= this.body.accel.x * me.timer.tick;
+
+		me.collision.check(this, true, this.collideHandler.bind(this), true);
+
 
 		this.body.update(delta);
 
 		this._super(me.Entity, "update", [delta]);
 
 		return true;
+	},
+
+	collideHandler: function(response){
+		//if creep runs into base it will stop and get bumped back
+		if(response.b.type==='PlayerBase'){
+			this.attacking=true;
+			//this.lastAttacking=this.now;
+			this.body.vel.x = 0;
+			//keeps moving creep to the right to maintain its position
+			this.pos.x = this.pos.x + 1;
+			//checks if it has been at least 1 second scince creep hits base
+			if((this.now-this.lastHit >= 1000)){
+				//updates the last hit timer
+				this.lastHit = this.now;
+				//calls player base lose health function and lose 1 health 
+				response.b.loseHealth(1);
+			}
+		}
 	}
+
+
 });
 
-game.GameManeger = Object.extend({
+game.GameManager = Object.extend({
 		init: function(x, y, settings){
 			//sets time of last creeper creation
 			this.now = new Date().getTime();
-			this.lastCreep = new Date().getTime;
+			this.lastCreep = new Date().getTime();
 		
 			this.alwaysUpdate = true;
 		},
@@ -288,9 +328,9 @@ game.GameManeger = Object.extend({
 			this.now = new Date().getTime();
 
 			//adds creep to world after a second
-			if(Math.round(this.now/100)%10 ===0 && (this.now - this.lastCreep >= 1000)){
+			if(Math.round(this.now/1000) % 10 ===0 && (this.now - this.lastCreep >= 1000)){
 				this.lastCreep = this.now;
-				var creepe = me.pool.pull("EnemyCreep", 1000, 0, {});
+				var creepe = me.pool.pull("EnemyCreep", 200, 0, {});
 				me.game.world.addChild(creepe, 5);
 			}
 			return true;
