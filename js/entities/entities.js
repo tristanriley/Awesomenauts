@@ -14,6 +14,9 @@ game.PlayerEntity = me.Entity.extend({
 
 			}
 		}]);
+		this.type = "PlayerEntity";
+		//gives player a health of 20
+		this.health = 20;
 		//sets characters velocity on x and y axis
 		this.body.setVelocity(5, 20);
 		//keep track of which direction your character is going
@@ -98,6 +101,10 @@ game.PlayerEntity = me.Entity.extend({
 		return true;
 	},
 
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+	},
+
 	collideHandler: function(response){
 		if(response.b.type==='EnemyBaseEntity'){
 			var ydif = this.pos.y - response.b.pos.y;
@@ -175,7 +182,8 @@ game.PlayerBaseEntity = me.Entity.extend({
 		return true;
 	},
 
-	loseHealth: function(){
+	loseHealth: function(damage){
+		//subtracts set damage amount from base health
 		this.health = this.health - damage;
 	},
 
@@ -307,6 +315,26 @@ game.EnemyCreep = me.Entity.extend({
 				//updates the last hit timer
 				this.lastHit = this.now;
 				//calls player base lose health function and lose 1 health 
+				response.b.loseHealth(1);
+			}
+		}else if (response.b.type==='PlayerEntity' ){
+			//checks diffrence of player and other entity
+			var xdif = this.pos.x - response.b.pos.x;
+			this.attacking=true;
+			//this.lastAttacking=this.now;
+		
+			if(xdif>0){
+				//keeps moving creep to the right to maintain its position
+				this.pos.x = this.pos.x + 1;
+				//sets velocity of player to 0
+				this.body.vel.x = 0;
+			}
+			//checks if it has been at least 1 second scince creep hits player
+			//dosent allow player to lose health when behind creep
+			if((this.now-this.lastHit >= 1000) && xdif>0){
+				//updates the last hit timer
+				this.lastHit = this.now;
+				//calls playerlose health function and lose 1 health 
 				response.b.loseHealth(1);
 			}
 		}
