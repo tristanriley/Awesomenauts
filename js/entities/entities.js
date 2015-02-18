@@ -126,6 +126,19 @@ game.PlayerEntity = me.Entity.extend({
 				//pushes player back
 				this.pos.x = this.pos.x +1;
 
+			}else if (response.b.type==='EnemyCreep' ){
+			//checks diffrence of player and other entity
+			var xdif = this.pos.x - response.b.pos.x;
+			var ydif = this.pos.y - response.b.pos.y;
+			//this.lastAttacking=this.now;
+		
+			if(xdif>0){
+				//keeps moving creep to the right to maintain its position
+				this.pos.x = this.pos.x + 1;
+				if(this.facing === "left"){
+				//sets velocity of playerto 0
+				this.body.vel.x = 0;
+				}
 			}
 			//checks if current animation is attack the runs function
 			//checks if it has been 1000 miliseconds since last attack so it dosent happen over again
@@ -135,9 +148,35 @@ game.PlayerEntity = me.Entity.extend({
 				//base losses health when attacked
 				response.b.loseHealth();
 			}
+		}else if(response.b.type==='EnemyCreep'){
+			var xdif = this.pos.x - response.b.pos.x;
+			var ydif = this.pos.y - response.b.pos.y
+
+			//pushes player back if colliding with creep
+			if (xdif>0){
+				this.pos.x = this.pos.x + 1;
+				//makes you have to face the creep to damage it
+				if(this.facing==="left"){
+					this.body.vel.x = 0;
+				}
+			//pushes player back if colliding with creep
+			}else{
+				this.pos.x = this.pos.x - 1;
+				//makes you have to face the creep to damage it
+				if(this.facing==="right"){
+					this.body.vel.x = 0;
+				}
+			}
+
+			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
+				&& (Math.abs(ydif) <= 40) && 
+				(((xdif>0)&& this.facing==="left") || ((xdif<0)&& this.facing==="right"))
+				){
+				this.lastHit = this.now;
+				response.b.loseHealth(1);
+			}
 		}
-	}
-});
+	};
 
 //function for player tower
 game.PlayerBaseEntity = me.Entity.extend({
@@ -285,8 +324,17 @@ game.EnemyCreep = me.Entity.extend({
 	this.renderable.setCurrentAnimation("walk");
 	},
 
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+	},
+
 
 	update: function(delta){
+		console.log(this.health);
+		//removes enemy creep from world once it's health is 0 or less
+		if(this.health <= 0){
+			me.game.world.removeChild(this);
+		}
 		//refreshes enemy
 		this.now = new Date().getTime();
 
@@ -360,7 +408,7 @@ game.GameManager = Object.extend({
 				this.lastCreep = this.now;
 				var creepe = me.pool.pull("EnemyCreep", 200, 0, {});
 				me.game.world.addChild(creepe, 5);
-			}
+			};
 			return true;
 		}
-});
+	});
