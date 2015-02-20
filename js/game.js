@@ -1,4 +1,3 @@
-
 /* Game namespace */
 var game = {
 
@@ -70,7 +69,7 @@ var game = {
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 
-		// Start the game.
+		// Start the game with the title screen
 		me.state.change(me.state.PLAY);
 	}
 };

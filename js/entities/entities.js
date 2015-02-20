@@ -1,407 +1,487 @@
 //creates a player entity and uses an image and creates deminsions of player
-game.PlayerEntity = me.Entity.extend({
+// player's class
+game.PlayerEntity = me.Entity.extend ({
+	//constructor function 
 	init: function(x, y, settings){
+		//reachers the constructor function for enitity
 		this._super(me.Entity, 'init', [x, y, {
-			//calls image of entity we want to use
-			image:"player",
+			//settings. shoes the player
+			image: "player",
+			//sets aside a width of 64 pixels for the sprite
 			width: 64,
+			//sets aside a height of 64 pixels for the sprite
 			height: 64,
-			spritewidth: "64",
+			//gives the sprite a width of 64. 
+			spritewidth : "64",
+			//gives the sprite a width of 64
 			spriteheight: "64",
-			//creates a function that defines where entity can move
 			getShape: function(){
+				//returns a rectangle of what the player walks into
 				return(new me.Rect(0, 0, 64, 64)).toPolygon();
-
 			}
 		}]);
+		//allows player to be interacted with
 		this.type = "PlayerEntity";
-		//gives player a health of 20
-		this.health = 20;
-		//sets characters velocity on x and y axis
-		this.body.setVelocity(5, 20);
-		//keep track of which direction your character is going
+		//sets the player's health to 100
+		this.health = game.data.playerHealth;
+		//says the player is not dead
+		this.death = false;
+		//sets movemet speed. allows player to move horizantally and vertically
+		this.body.setVelocity(game.data.playerMoveSpeed, 20);
+		//keeps track of which way the character is going
 		this.facing = "right";
-		//make hit only count as 1
+		//variable for keeping track of time and date
 		this.now = new Date().getTime();
+		//same ^^
 		this.lastHit = this.now;
-		this.lastAttck = new Date().getTime();
-		//follows player with screen so we can see him
+		//keeps the player from attacking multiple times
+		this.lastAttack = new Date().getTime();
+		//makesit so the player is always on the screen
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
-
-		//adds animation when character is idle
+		//gives player animation while standing
 		this.renderable.addAnimation("idle", [78]);
-		//adds animation as character walks
+		//gives player animation while walking
 		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
-		//sets character image when we start game
+		//gives player animation while attacking
+		this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
+		//the player's start animation
 		this.renderable.setCurrentAnimation("idle");
-		//adds animations for attacking
-		this.renderable.addAnimation("attack", [65, 66, 67, 68, 70, 71, 72], 80);
-
 	},
 
-	update: function(delta){
-		this.now = new Date().getTime();
-		//adds if/else so that the caharacter will mve when key is pressed
-		if (me.input.isKeyPressed("right")) {
-			//adds to the postition of x by the velocity defined above in 
-			//setVelocity() and multiplying it by me.timer.tick
-			//me.timer.tick makes the movement smooth
-			this.body.vel.x += this.body.accel.x * me.timer.tick;
-			//keep track of which direction your character is going
-			this.facing = "right";
-			//flips walking animation
-			this.flipX(true);
 
-		}else if (me.input.isKeyPressed("left")){
+	//delta is the change in time that's happening
+	update: function(delta){
+		//keeps timer updated
+		this.now = new Date().getTime();
+		//runa when player's health reaches 0
+		if (this.health <= 0) {
+			//says player is dead
+			this.dead = true;
+		}
+		//runs if the right key is pressed
+		if(me.input.isKeyPressed("right")){
+			//when right key is pressed, adds to the position of my x by the velocity defined above in setVelocity and multiplying it by me.timer.tick
+			//me.timer.tick makes the movement look smooth
+			this.body.vel.x += this.body.accel.x * me.timer.tick;
+			//so the program knows the character is facing right
+			this.facing = "right";
+			//flips the animation
+			this.flipX(true);
+		}
+
+		else if(me.input.isKeyPressed("left")){
+			//when right key is pressed, adds to the position of my x by the velocity defined above in setVelocity and multiplying it by me.timer.tick
+			//me.timer.tick makes the movement look smooth
 			this.body.vel.x -= this.body.accel.x * me.timer.tick;
-			//keep track of which direction your character is going
+			//so the program knows the character is facing left
 			this.facing = "left";
-			//flips blayer back so it is facing left
+			//doesn't flip the animation
 			this.flipX(false);
-		}else{
-			//makes it so that character stops moving when key is not pressed
+		}
+
+		//if the right key isn't being pressed, the player doesn't move
+		else{
 			this.body.vel.x = 0;
 		}
-
-		if (me.input.isKeyPressed("jump") && !this.body.jumping && !this.body.falling) {
+		//runs only if the up key is pressed, the player isn't already jumping or falling
+		if(me.input.isKeyPressed("jump") && !this.body.jumping && !this.body.falling){
+			//makes the player jump
 			this.body.jumping = true;
+			//sets velocity of the jump and the time
 			this.body.vel.y -= this.body.accel.y * me.timer.tick;
-		};
+		}
 
+		//runs if the attack key is pressed
 		if(me.input.isKeyPressed("attack")){
 			if(!this.renderable.isCurrentAnimation("attack")){
-				//sets current animation to attack and once that is over goes back to idle animation
-				this.renderable.setCurrentAnimation("attack", "idle");
-				//makes it so next time sequence is started we begin
-				//from the first animation not the one we left off at
+				//sets current animation to attack. goes back to idle oncethe attack is over it goes back to idle
+				this.renderable.setCurrentAnimation("attack", "idle")
+				//makes it so that next time the button is pressed the player starts from the first animation, not where it left off
 				this.renderable.setAnimationFrame();
 			}
-
 		}
-	//makes is so player does not stat out walking
-	else if(this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")){
-		//if statement that makes character walk
-		if (!this.renderable.isCurrentAnimation("walk")) {
-			//lets program use every walk animation
-			this.renderable.setCurrentAnimation("walk");
+
+		//runs if the player is moving horizantally and not attacking
+		else if(this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")){
+			//runs if the player isn't already running the walk animation
+			if(!this.renderable.isCurrentAnimation("walk")){
+				//gives the player the walking animation
+				this.renderable.setCurrentAnimation("walk");
+			}
 		}
-		//player stops walking when key is not presseed
-		//player will do entire attack motion when a is pressed
-	}else if(!this.renderable.isCurrentAnimation("attack")){
-		this.renderable.setCurrentAnimation("idle");
-	}
-
-
-		//passing perameter into function with info about player condition
+		//runs if player is standing still and not attacking
+		else if(!this.renderable.isCurrentAnimation("attack")){
+			//gives the player the idle animation
+			this.renderable.setCurrentAnimation("idle");
+		}
+		//checks to see if player is colliding with base
 		me.collision.check(this, true, this.collideHandler.bind(this), true);
-		//shows updated position on screen
+		//tells above code to work
 		this.body.update(delta);
-		//lets animation update on fly
+		//updates the code
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
-
+	//runs when called
 	loseHealth: function(damage){
+		//subtracts set amount of health
 		this.health = this.health - damage;
 	},
-
+	//function for when player collides with tower
 	collideHandler: function(response){
-		if(response.b.type==='EnemyBaseEntity'){
+		//runs if the player collides with the enemy base
+		if (response.b.type === 'EnemyBaseEntity') {
+			//represents the difference between player's y distance and enemy's y distance
 			var ydif = this.pos.y - response.b.pos.y;
+			//represents the difference between player's and enemy base's x distance
 			var xdif = this.pos.x - response.b.pos.x;
-			//keeps player from glitching into the base from the left
-			if (ydif<-40 && xdif< 50 && xdif>-35) {
-				this.body.falling= false;
+			//runs if the player is on top of the enemy base
+			if (ydif < -40 && xdif < 60 && xdif > -35) {
+				//stops the player from moving down
+				this.body.falling = false;
+				//keeps the player from falling through the tower
 				this.body.vel.y = -1;
 			}
-			else if(xdif>-50 && this.facing==='right' && (xdif<0)){
-				//stops player velocity
+			//runs if the player's x position is 37 units away from the tower while facing right 
+			else if (xdif > -36 && this.facing === "right" && xdif < 0) {
+				//stops player from moving 
 				this.body.vel.x = 0;
-				//pushes player back
+				//moves player slightly away from tower
 				this.pos.x = this.pos.x -1;
-			//keeps player from glitching into the base from the right
-			}else if(xdif<60 && this.facing==='left' && (xdif>0)){
-				//stops player velocity
+			}
+			//runs if the player's x position is 74 units away from the tower while facing left 
+			else if (xdif < 75 && this.facing === "left" && xdif > 0) {
+				//stops player from moving 
 				this.body.vel.x = 0;
-				//pushes player back
+				//moves player slightly away from tower
 				this.pos.x = this.pos.x +1;
-}
-			}else if (response.b.type==='EnemyCreep' ){
-			//checks diffrence of player and other entity
+			}
+			//runs if the player is attacking and its been 1000 milliseconds since the last hit
+			if (this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer
+				//and if the y difference is less than 41
+				&& (Math.abs(ydif) <= 40) &&
+				//and if the player is facing the creep's baack or front
+				((xdif > 0 ) && this.facing === "left") || ((xdif < 0) && this.facing === "right")) {
+				//so the computer knows th eplayer just hit the tower
+				this.lastHit = this.now;
+				//calls the loseHealth function and sets the parameter to the playerAttack variable
+				response.b.loseHealth(game.data.playerAttack);
+			}
+		}
+		//runs if the player collides with the enemy creep
+		else if (response.b.type === 'EnemyCreep') {
+			//stores the horizantal distance from the player to the enemy creep
 			var xdif = this.pos.x - response.b.pos.x;
-			var ydif = this.pos.y - response.b.pos.y;
-			//this.lastAttacking=this.now;
-		
-			if(xdif>0){
-				//keeps moving creep to the right to maintain its position
+			//stores the vertical distance from the player to the enemy creep
+			var ydif = this.pos.y - response.b.pos.y; 
+			//runs if the player is to the left of the enemy creep
+			if (xdif > 0) {
+				//pushes the player 1 unit to the right
 				this.pos.x = this.pos.x + 1;
-				if(this.facing === "left"){
-				//sets velocity of playerto 0
-				this.body.vel.x = 0;
-				}
-			//pushes player back if colliding with creep
-			}else{
-				this.pos.x = this.pos.x - 1;
-				//makes you have to face the creep to damage it
-				if(this.facing==="right"){
+				//runs if the player is facing left
+				if (this.facing === "left") {
+					//stops the player's movement
 					this.body.vel.x = 0;
 				}
 			}
-			//checks if current animation is attack the runs function
-			//checks if it has been 1000 miliseconds since last attack so it dosent happen over again
-			if(!this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
-				
-				this.lastHit = this.now;
-				//base losses health when attacked
-				response.b.loseHealth();
+			else {
+				//pushes the player 1 unit to the left
+				this.pos.x = this.pos.x - 1;
+				//runs if the player is facing right
+				if (this.facing === "right") {
+					//stops the player's movement
+					this.body.vel.x = 0;
+				}
 			}
-		}else if(response.b.type==='EnemyCreep'){
-			var xdif = this.pos.x - response.b.pos.x;
-			var ydif = this.pos.y - response.b.pos.y
-
-			
-
-			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
-				&& (Math.abs(ydif) <= 40) && 
-				(((xdif>0)&& this.facing==="left") || ((xdif<0)&& this.facing==="right"))
-				){
+			//runs the loseHealth function only if the player is attacking the enemy creep
+			//can only take one life point per second
+			if (this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer) {
+				//updates the timer
 				this.lastHit = this.now;
-				response.b.loseHealth(1);
+				//calls the loseHealth function with a parameter of 1
+				response.b.loseHealth(game.data.playerAttack);
 			}
-		};
+		}
 	}
 });
 
-//function for player tower
+
+//tower class
 game.PlayerBaseEntity = me.Entity.extend({
-	init : function(x, y, settings){
-			this._super(me.Entity, 'init', [x, y, {
-				image: "tower",
-				width: 100,
-				height: 100,
-				spriteheight: "100",
-				spriteheight: "100",
-				getShape: function(){
-					return(new me.Rect(0, 0, 75, 75)).toPolygon();
-				}
+	init: function(x, y, settings){
+		//reachers the constructor function for tower
+		this._super(me.Entity, 'init', [x, y, {
+			//settings. shoes the tower
+			image: "tower",
+			//sets aside a width of 100 pixels for the tower
+			width: 100,
+			//sets aside a height of 100 pixels for the tower
+			height: 100,
+			//gives the tower a width of 100. 
+			spritewidth : "100",
+			//gives the tower a width of 100
+			spriteheight: "100",
+			getShape: function(){
+				//returns a rectangle of what the tower walks into
+				return(new me.Rect(0, 0, 100, 60)).toPolygon();
+			}
+		}]);
+		//says that tower hasn't been destroyed
+		this.broken = false;
+		//gives tower a "health" of ten
+		this.health = game.data.playerBaseHealth;
+		//makes sure the tower's status is always updating, eben when it isn't on the map
+		this.alwaysUpdate = true;
+		//makes teh tower collidable
+		this.body.onCollision = this.onCollision.bind(this);
+		//checks what player is running into
+		this.type = "PlayerBase";
+		//adds the defualt animatin for the game
+		this.renderable.addAnimation("idle", [0]);
+		//adds the animation for when the tower is broken
+		this.renderable.addAnimation("broken", [1]);
+		//sets the desfault animation
+		this.renderable.setCurrentAnimation("idle");
 
-			}]);
-			//give variable for when tower is not broken
-			this.broken = false;
-			//gives tower health
-			this.health = 10;
-			//updates tower wether or not looking at it
-			this.alwaysUpdate = true;
-			//entities will be able to collide with tower
-			this.body.onCollision = this.onCollision.bind(this);
+	},	
 
-			this.type = "PlayerBase";
-			//shows animation of base not burning
-			this.renderable.addAnimation("idle", [0]);
-			this.renderable.addAnimation("broken", [1]);
-			this.renderable.setCurrentAnimation("idle");
-	},
-	//function that updates state of the tower
+
 	update:function(delta){
-		//breaks tower when health is 0 or less
-		if(this.health<=0){
-			this.broken = true; 
-			//sets animation to burning tower when it breaks
+		//runs if health is less than or equal to 0
+		if(this.health <= 0){
+			//makes the tower "broken"
+			this.broken = true;
+			//sets animation for "broken"
 			this.renderable.setCurrentAnimation("broken");
-		}
+		} 
+		//updates tower status
 		this.body.update(delta);
-		//updates state of tower
+		//updates
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
-
+	//runs whenever called on
 	loseHealth: function(damage){
-		//subtracts set damage amount from base health
+		//subtracts set damage amount from health everytime ran
 		this.health = this.health - damage;
 	},
-
-
+	//function that runs when base is touched
 	onCollision: function(){
 
 	}
 });
 
-//function for enemy tower
+//tower class
 game.EnemyBaseEntity = me.Entity.extend({
-	init : function(x, y, settings){
-			this._super(me.Entity, 'init', [x, y, {
-				image: "tower",
-				width: 100,
-				height: 100,
-				spriteheight: "100",
-				spriteheight: "100",
-				getShape: function(){
-					return(new me.Rect(0, 0, 75, 75)).toPolygon();
-				}
+	init: function(x, y, settings){
+		//reachers the constructor function for tower
+		this._super(me.Entity, 'init', [x, y, {
+			//settings. shoes the tower
+			image: "tower",
+			//sets aside a width of 100 pixels for the tower
+			width: 100,
+			//sets aside a height of 100 pixels for the tower
+			height: 100,
+			//gives the tower a width of 100. 
+			spritewidth : "100",
+			//gives the tower a width of 100
+			spriteheight: "100",
+			getShape: function(){
+				//returns a rectangle of what the tower walks into
+				return(new me.Rect(0, 0, 100, 60)).toPolygon();
+			}
+		}]);
+		//says that tower hasn't been destroyed
+		this.broken = false;
+		//gives tower a "health" of ten
+		this.health = game.data.enemyBaseHealth;
+		//makes sure the tower's status is always updating, eben when it isn't on the map
+		this.alwaysUpdate = true;
+		//makes the tower collidable
+		this.body.onCollision = this.onCollision.bind(this);
+		//checks what player is running into
+		this.type = "EnemyBaseEntity";
+		//adds the defualt animatin for the game
+		this.renderable.addAnimation("idle", [0]);
+		//adds the animation for when the tower is broken
+		this.renderable.addAnimation("broken", [1]);
+		//sets the default animation
+		this.renderable.setCurrentAnimation("idle");
+	},	
 
-			}]);
-			//give variable for when tower is not broken
-			this.broken = false;
-			//gives tower health
-			this.health = 10;
-			//updates tower wether or not looking at it
-			this.alwaysUpdate = true;
-			//entities will be able to collide with tower
-			this.body.onCollision = this.onCollision.bind(this);
 
-			this.type = "EnemyBaseEntity";
-			//shows animation of base not burning
-			this.renderable.addAnimation("idle", [0]);
-			this.renderable.addAnimation("broken", [1]);
-			this.renderable.setCurrentAnimation("idle");
-	},
-	//function that updates state of the tower
 	update:function(delta){
-		//breaks tower when health is 0 or less
+		//runs if health is less than or equal to 0
 		if(this.health<=0){
+			//makes the tower "broken"
 			this.broken = true;
-			//sets image as burrning when broken
-			this.renderable.setCurrentAnimation("broken"); 
-			//renderable is a class made in mealonjs that allows us to change animation
+			//sets animation for "broken"
+			this.renderable.setCurrentAnimation("broken");
 		}
+		//updates tower status
 		this.body.update(delta);
-		//updates state of tower
+		//updates
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
-
+	//function that runs when base is touched
 	onCollision: function(){
-
+		
 	},
 
 	loseHealth: function(){
+		//makes the tower loose 1 health on each hit
 		this.health--;
 	}
 });
 
 game.EnemyCreep = me.Entity.extend({
 	init: function(x, y, settings){
-		this._super(me.Entity, 'init', [x, y, {
-			//sets image for creep
-			image: "creep1",
-			//sets height and width for creep
-			width: 32,
-			height: 64,
-			spritewidth: "32",
-			spriteheight: "64",
-			//makes object a polygon that is 32 by 64
-			getShape: function(){
-				return(new me.Rect(200, 0, 32, 64)).toPolygon();
-			}
-		}]);
-	//gives creep 10 health
-	this.health = 10;
-	//updates health and position of creep
-	this.alwaysUpdate = true;
-	//lets us know if the enemy is currently attacking
-	this.attacking = false;
-	//refreshes enemy
-	this.lastAttacking = new Date().getTime();
-	//keeps track of when creep last attacks
-	this.lastHit = new Date().getTime();
-	//keeps track of when creep last hits
-	this.lastHit = new Date().getTime();
-	this.now = new Date().getTime();
-	//give the creep a speed
-	this.body.setVelocity(3, 20);
-
-	this.type = "EnemyCreep";
-
-	//adds animation when creep is walking
-	this.renderable.addAnimation("walk", [3, 4, 5], 80);
-	//sets animation of creep walking
-	this.renderable.setCurrentAnimation("walk");
-	},
-
-	loseHealth: function(damage){
-		this.health = this.health - damage;
-	},
-
-
-	update: function(delta){
-		//removes enemy creep from world once it's health is 0 or less
-		if(this.health <= 0){
-			me.game.world.removeChild(this);
-		}
-		//refreshes enemy
-		this.now = new Date().getTime();
-
-		this.body.vel.x -= this.body.accel.x * me.timer.tick;
-
-		me.collision.check(this, true, this.collideHandler.bind(this), true);
-
-
-		this.body.update(delta);
-
-		this._super(me.Entity, "update", [delta]);
-
-		return true;
-	},
-
-	collideHandler: function(response){
-		//if creep runs into base it will stop and get bumped back
-		if(response.b.type==='PlayerBase'){
-			this.attacking=true;
-			//this.lastAttacking=this.now;
-			this.body.vel.x = 0;
-			//keeps moving creep to the right to maintain its position
-			this.pos.x = this.pos.x + 1;
-			//checks if it has been at least 1 second scince creep hits base
-			if((this.now-this.lastHit >= 1000)){
-				//updates the last hit timer
-				this.lastHit = this.now;
-				//calls player base lose health function and lose 1 health 
-				response.b.loseHealth(1);
-			}
-		}else if (response.b.type==='PlayerEntity' ){
-			//checks diffrence of player and other entity
-			var xdif = this.pos.x - response.b.pos.x;
-			this.attacking=true;
-			//this.lastAttacking=this.now;
-		
-			if(xdif>0){
-				//keeps moving creep to the right to maintain its position
-				this.pos.x = this.pos.x + 1;
-				//sets velocity of player to 0
-				this.body.vel.x = 0;
-			}
-			//checks if it has been at least 1 second scince creep hits player
-			//dosent allow player to lose health when behind creep
-			if((this.now-this.lastHit >= 1000) && xdif>0){
-				//updates the last hit timer
-				this.lastHit = this.now;
-				//calls playerlose health function and lose 1 health 
-				response.b.loseHealth(1);
-			}
-		}
-	}
-
-
-});
-
-game.GameManager = Object.extend({
-		init: function(x, y, settings){
-			//sets time of last creeper creation
-			this.now = new Date().getTime();
-			this.lastCreep = new Date().getTime();
-		
+			//reaches the constructor function for enitity
+			this._super(me.Entity, 'init', [x, y, {
+				//settings. shows the creep
+				image: "creep1",
+				//sets aside a width of 64 pixels for the sprite
+				width: 32,
+				//sets aside a height of 64 pixels for the sprite
+				height: 64,
+				//gives the sprite a width of 64. 
+				spritewidth : "32",
+				//gives the sprite a width of 64
+				spriteheight: "64",
+				//gives creep a form
+				getShape: function(){
+					return(new me.Rect(0, 0, 32, 64)).toPolygon();
+				}
+			}]);
+			//sets health to ten
+			this.health = game.data.enemyCreepHealth;
+			//makes the creep's satus continuosly update
 			this.alwaysUpdate = true;
+			//says the creep is not attacking
+			this.attacking = false;
+			//records last time creep attacked anything
+			this.lastAttacking = new Date().getTime();
+			//records last time creep hit anything
+			this.lastHit = new Date().getTime();
+			//timer for attacking
+			this.now = new Date().getTime();
+			//sets the creep's horizantal and vertical speed
+			this.body.setVelocity(3, 20);
+			//sets the sprite's type
+			this.type = "EnemyCreep";
+			//creates the walking animation
+			this.renderable.addAnimation("walk", [3, 4, 5], 80);
+			//applies the walking animation
+			this.renderable.setCurrentAnimation("walk");
+		},
+		//subtracts health from enemy creep
+		loseHealth: function(damage) {
+			this.health = this.health - damage;
 		},
 
-		update: function(){
-			this.now = new Date().getTime();
 
-			//adds creep to world after a second
-			if(Math.round(this.now/1000) % 10 ===0 && (this.now - this.lastCreep >= 1000)){
-				this.lastCreep = this.now;
-				var creepe = me.pool.pull("EnemyCreep", 200, 0, {});
-				me.game.world.addChild(creepe, 5);
-			};
+		//delta is the change in time that's happening
+		update: function(delta){
+			//removes enemy creep sprtites once their health is at zero
+			if(this.health <= 0){
+				me.game.world.removeChild(this);
+			}
+			//updates attack
+			this.now = new Date().getTime();
+			//makes the creep move
+			this.body.vel.x -= this.body.accel.x *  me.timer.tick;
+			//checks for collisions with player
+			me.collision.check(this, true, this.collideHandler.bind(this), true);
+			//basic update functions
+			this.body.update(delta);
+			this._super(me.Entity, "update", [delta]);
 			return true;
+		},
+		//function for creeps' collisions
+		collideHandler: function(response){
+			//runs if creep collides with tower 
+			if (response.b.type === 'PlayerBase') {
+				//makes the creep attack
+				this.attacking = true;
+				//timer that says when last attacked
+				//this.lastAttacking = this.now;
+				//prevents the creep from walking through the tower
+				this.body.vel.x = 0;
+				//pushes the creep back a little to maintain its position
+				this.pos.x = this.pos.x + 1;
+				//Only allows the creep to hit the tower once every second
+				if ((this.now - this.lastHit >= game.data.creepAttackTimer)) {
+					//updates the lastHit timer
+					this.lastHit = this.now;
+					//runs the losehealth function, with 1 point damage
+					response.b.loseHealth(game.data.enemyCreepAttack);
+				}
+			}
+			else if (response.b.type === 'PlayerEntity') {
+				//see where the player is compared to the creep
+				var xdif = this.pos.x - response.b.pos.x;
+				//makes the creep attack
+				this.attacking = true;
+				//timer that says when last attacked
+				//this.lastAttacking = this.now;
+				
+				//only runs if the creep's face is right in front of the orc or under
+				if (xdif > 0) {
+					//prevents the creep from walking through the player
+					this.body.vel.x = 0;
+					//pushes the creep back a little to maintain its position
+					this.pos.x = this.pos.x + 1;
+				}
+				//Only allows the creep to hit the tower once every second and if the player is not behind the creep
+				if ((this.now - this.lastHit >= game.data.creepAttackTimer) && xdif > 0) {
+					//updates the lastHit timer
+					this.lastHit = this.now;
+					//runs the losehealth function, with 1 point damage
+					response.b.loseHealth(game.data.enemyCreepAttack);
+				}
+			}
 		}
-	});
+	
+});
+
+
+
+//class that runs all the timers and occurences that aren't inside any of the other entities
+game.GameManager = Object.extend({
+	//constructor function
+	init: function(x, y, settings){
+		//sets timer
+		this.now = new Date().getTime();
+		//keeps track of last time creep was made
+		this.lastCreep = new Date().getTime();
+		//keeps the function updating
+		this.alwaysUpdate = true;
+	},
+
+	update: function(){
+		//keeps track of timer
+		this.now = new Date().getTime();
+		//runs if player is dead
+		if(game.data.player.dead){
+			//takes the player off the screen
+			me.game.world.removeChild(game.data.player);
+			//runs the resetPlayer function
+			me.state.current().resetPlayer(10, 0);
+
+		}
+		//checks to make sure there is a multiple of ten. makes sure its been at least a second since last creep has been made
+		if(Math.round(this.now/1000)%10 === 0 && (this.now - this.lastCreep >= 1000)){
+			//updates timer
+			this.lastCreep = this.now;
+			//creates and inserts creeps into world
+			var creepe = me.pool.pull("EnemyCreep", 1000, 0, {});
+			var creepf = me.pool.pull("FriendCreep", 0, 0, {});
+			//adds the creeps to the world
+			me.game.world.addChild(creepe, 5);
+			me.game.world.addChild(creepf, 5);
+		}
+		//updates
+		return true;
+	}
+});
