@@ -5,13 +5,28 @@ var game = {
 	// an object where to store game information
 	data : {
 		// score
-		score : 0
+		score : 0,
+		enemyBaseHealth : 10,
+		playerBaseHealth: 10,
+		enemyCreepHealth: 10,
+		playerHealth: 10,
+		friendCreepHealth: 10,
+		enemyCreepAttack: 1,
+		friendCreepAttack: 1,
+		playerAttack: 1,
+		playerAttackTimer: 1000,
+		creepAttackTimer: 1000,
+		playerMoveSpeed: 8,
+		creepMoveSpeed: 5,
+		gameManager: "",
+		player: ""
 	},
 	
 	
 	// Run on page load.
 	"onload" : function () {
-	// Initialize the video. basic setup for screen
+	// Initialize the video.
+	//sets the height and width of the screen
 	if (!me.video.init("screen",  me.video.CANVAS, 1067, 600, true, '1.0')) {
 		alert("Your browser does not support HTML5 canvas.");
 		return;
@@ -39,16 +54,17 @@ var game = {
 
 	// Run on game resources loaded.
 	"loaded" : function () {
-		//adds player to pool of entities we can use
+		//adds player to pool
 		me.pool.register("player", game.PlayerEntity, true);
-		//anything registered with true can have multiple instances of
-		//adds player base to pool of entities we can use
+		//adds player base to pool
 		me.pool.register("PlayerBase", game.PlayerBaseEntity);
-		//adds enemy base to pool of entities we can use
+		//adds enemy base to pool
 		me.pool.register("EnemyBase", game.EnemyBaseEntity);
-		//adds enemy creep to pool of entities we can use
+		//adds enemy creep to pool
 		me.pool.register("EnemyCreep", game.EnemyCreep, true);
-		//adds game manager to pool of entities we can use
+		//adds friend creep to pool
+		me.pool.register("FriendCreep", game.FriendCreep, true);
+		//registers oblject
 		me.pool.register("GameManager", game.GameManager);
 
 		me.state.set(me.state.MENU, new game.TitleScreen());

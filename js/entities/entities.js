@@ -125,7 +125,7 @@ game.PlayerEntity = me.Entity.extend({
 				this.body.vel.x = 0;
 				//pushes player back
 				this.pos.x = this.pos.x +1;
-
+}
 			}else if (response.b.type==='EnemyCreep' ){
 			//checks diffrence of player and other entity
 			var xdif = this.pos.x - response.b.pos.x;
@@ -138,6 +138,13 @@ game.PlayerEntity = me.Entity.extend({
 				if(this.facing === "left"){
 				//sets velocity of playerto 0
 				this.body.vel.x = 0;
+				}
+			//pushes player back if colliding with creep
+			}else{
+				this.pos.x = this.pos.x - 1;
+				//makes you have to face the creep to damage it
+				if(this.facing==="right"){
+					this.body.vel.x = 0;
 				}
 			}
 			//checks if current animation is attack the runs function
@@ -152,21 +159,7 @@ game.PlayerEntity = me.Entity.extend({
 			var xdif = this.pos.x - response.b.pos.x;
 			var ydif = this.pos.y - response.b.pos.y
 
-			//pushes player back if colliding with creep
-			if (xdif>0){
-				this.pos.x = this.pos.x + 1;
-				//makes you have to face the creep to damage it
-				if(this.facing==="left"){
-					this.body.vel.x = 0;
-				}
-			//pushes player back if colliding with creep
-			}else{
-				this.pos.x = this.pos.x - 1;
-				//makes you have to face the creep to damage it
-				if(this.facing==="right"){
-					this.body.vel.x = 0;
-				}
-			}
+			
 
 			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
 				&& (Math.abs(ydif) <= 40) && 
@@ -175,8 +168,9 @@ game.PlayerEntity = me.Entity.extend({
 				this.lastHit = this.now;
 				response.b.loseHealth(1);
 			}
-		}
-	};
+		};
+	}
+});
 
 //function for player tower
 game.PlayerBaseEntity = me.Entity.extend({
@@ -330,7 +324,6 @@ game.EnemyCreep = me.Entity.extend({
 
 
 	update: function(delta){
-		console.log(this.health);
 		//removes enemy creep from world once it's health is 0 or less
 		if(this.health <= 0){
 			me.game.world.removeChild(this);
