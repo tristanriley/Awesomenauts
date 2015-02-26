@@ -1,3 +1,4 @@
+/*
 //creates a player entity and uses an image and creates deminsions of player
 // player's class
 game.PlayerEntity = me.Entity.extend ({
@@ -606,4 +607,4 @@ game.GameManager = Object.extend({
 		//updates
 		return true;
 	}
-});
+});*/
