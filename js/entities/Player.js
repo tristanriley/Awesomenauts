@@ -4,35 +4,22 @@ game.PlayerEntity = me.Entity.extend ({
 	init: function(x, y, settings){
 		//calls setSuper function
 		this.setSuper();
+		//calls setPlayerTimers function
+		this.setPlayerTimers();
+		//calls setAttributes function
+		this.setAttributes();
+		//calls setFlags function
+		this.setFlags();
+		//calls addAnimation function
+		this.addAnimation();
 		//allows player to be interacted with
 		this.type = "PlayerEntity";
-		//sets the player's health to 100
-		this.health = game.data.playerHealth;
-		//says the player is not dead
-		this.dead = false;
-		//sets attack
-		this.attack = game.data.playerAttack;
-		//sets movemet speed. allows player to move horizantally and vertically
-		this.body.setVelocity(game.data.playerMoveSpeed, 20);
-		//keeps track of which way the character is going
-		this.facing = "right";
-		//variable for keeping track of time and date
-		this.now = new Date().getTime();
-		//same ^^
-		this.lastHit = this.now;
-		//keeps the player from attacking multiple times
-		this.lastAttack = new Date().getTime();
 		//makesit so the player is always on the screen
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
-		//gives player animation while standing
-		this.renderable.addAnimation("idle", [78]);
-		//gives player animation while walking
-		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
-		//gives player animation while attacking
-		this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
 		//the player's start animation
 		this.renderable.setCurrentAnimation("idle");
 	},
+
 	//sets up the super class
 	setSuper: function(){
 		//reachers the constructor function for enitity
@@ -52,6 +39,43 @@ game.PlayerEntity = me.Entity.extend ({
 				return(new me.Rect(0, 0, 64, 64)).toPolygon();
 			}
 		}]);
+	},
+
+	//functions to set player's timer's
+	setPlayerTimers: function(){
+		//variable for keeping track of time and date
+		this.now = new Date().getTime();
+		//same ^^
+		this.lastHit = this.now;
+		//keeps the player from attacking multiple times
+		this.lastAttack = new Date().getTime();
+	},
+	
+	//function to set player's functions
+	setAttributes: function(){
+		//sets the player's health to 100
+		this.health = game.data.playerHealth;
+		//sets attack
+		this.attack = game.data.playerAttack;
+		//sets movemet speed. allows player to move horizantally and vertically
+		this.body.setVelocity(game.data.playerMoveSpeed, 20);
+	},
+
+
+	setFlags: function(){
+		//says the player is not dead
+		this.dead = false;
+		//keeps track of which way the character is going
+		this.facing = "right";
+	},
+
+	addAnimation: function(){
+		//gives player animation while standing
+		this.renderable.addAnimation("idle", [78]);
+		//gives player animation while walking
+		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
+		//gives player animation while attacking
+		this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
 	},
 
 
