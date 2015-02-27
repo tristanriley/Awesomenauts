@@ -50,7 +50,7 @@ game.PlayerEntity = me.Entity.extend ({
 		//keeps the player from attacking multiple times
 		this.lastAttack = new Date().getTime();
 	},
-	
+
 	//function to set player's functions
 	setAttributes: function(){
 		//sets the player's health to 100
@@ -67,6 +67,8 @@ game.PlayerEntity = me.Entity.extend ({
 		this.dead = false;
 		//keeps track of which way the character is going
 		this.facing = "right";
+		//says player is not attacking
+		this.attacking = false;
 	},
 
 	addAnimation: function(){
@@ -83,11 +85,37 @@ game.PlayerEntity = me.Entity.extend ({
 	update: function(delta){
 		//keeps timer updated
 		this.now = new Date().getTime();
+
+		this.dead = checkIfDead();
+
+		this.checkKeyPressesAndMove();		
+
+		this.setAnimation();
+		
+		//checks to see if player is colliding with base
+		me.collision.check(this, true, this.collideHandler.bind(this), true);
+		//tells above code to work
+		this.body.update(delta);
+		//updates the code
+		this._super(me.Entity, "update", [delta]);
+		return true;
+	},
+	//runs when called
+	loseHealth: function(damage){
+		//subtracts set amount of health
+		this.health = this.health - damage;
+	},
+
+	checkIfDead: function(){
 		//runa when player's health reaches 0
 		if (this.health <= 0) {
 			//says player is dead
-			this.dead = true;
+			return true;
 		}
+		return false;
+	},
+
+	checkKeyPressesAndMove: function(){
 		//runs if the right key is pressed
 		if(me.input.isKeyPressed("right")){
 			//when right key is pressed, adds to the position of my x by the velocity defined above in setVelocity and multiplying it by me.timer.tick
@@ -121,8 +149,12 @@ game.PlayerEntity = me.Entity.extend ({
 			this.body.vel.y -= this.body.accel.y * me.timer.tick;
 		}
 
+		me.input.isKeyPressed("attack");
+	},
+
+	setAnimation: function(){
 		//runs if the attack key is pressed
-		if(me.input.isKeyPressed("attack")){
+		if(this.attacking){
 			if(!this.renderable.isCurrentAnimation("attack")){
 				//sets current animation to attack. goes back to idle oncethe attack is over it goes back to idle
 				this.renderable.setCurrentAnimation("attack", "idle")
@@ -144,18 +176,6 @@ game.PlayerEntity = me.Entity.extend ({
 			//gives the player the idle animation
 			this.renderable.setCurrentAnimation("idle");
 		}
-		//checks to see if player is colliding with base
-		me.collision.check(this, true, this.collideHandler.bind(this), true);
-		//tells above code to work
-		this.body.update(delta);
-		//updates the code
-		this._super(me.Entity, "update", [delta]);
-		return true;
-	},
-	//runs when called
-	loseHealth: function(damage){
-		//subtracts set amount of health
-		this.health = this.health - damage;
 	},
 	//function for when player collides with tower
 	collideHandler: function(response){
