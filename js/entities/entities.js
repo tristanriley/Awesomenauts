@@ -86,7 +86,7 @@ game.PlayerEntity = me.Entity.extend ({
 		//keeps timer updated
 		this.now = new Date().getTime();
 
-		this.dead = checkIfDead();
+		this.dead = this.checkIfDead();
 
 		this.checkKeyPressesAndMove();		
 

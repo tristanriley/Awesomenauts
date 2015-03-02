@@ -3,7 +3,7 @@ game.PlayerEntity = me.Entity.extend ({
 	//constructor function 
 	init: function(x, y, settings){
 		//calls setSuper function
-		this.setSuper();
+		this.setSuper(x, y);
 		//calls setPlayerTimers function
 		this.setPlayerTimers();
 		//calls setAttributes function
@@ -21,7 +21,7 @@ game.PlayerEntity = me.Entity.extend ({
 	},
 
 	//sets up the super class
-	setSuper: function(){
+	setSuper: function(x, y){
 		//reachers the constructor function for enitity
 		this._super(me.Entity, 'init', [x, y, {
 			//settings. shoes the player

@@ -15,14 +15,6 @@ game.PlayScreen = me.ScreenObject.extend({
 		var gamemanager = me.pool.pull("GameManager", 0 , 0, {});
 		//puts gamemanager into world
 		me.game.world.addChild(gamemanager, 0);
-		//makes the D key into a variable
-		me.input.bindKey(me.input.KEY.D, "right");
-		//makes the A key into a variable
-		me.input.bindKey(me.input.KEY.A, "left");
-		//makes the W key into a variable
-		me.input.bindKey(me.input.KEY.W, "jump");
-		//makes an attack key
-		me.input.bindKey(me.input.KEY.SHIFT, "attack");
 		//Makes the right key into a variable
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
 		//makes the right key into a variable
