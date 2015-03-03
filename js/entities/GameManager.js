@@ -62,6 +62,26 @@ game.HeroDeathManager = Object.extend({
 			me.state.current().resetPlayer(10, 0);
 
 		}
-
+		return true;
 	}
 });
+
+game.ExperienceManager = object.extend({
+	init: function(x, y, settings){
+		this.alwaysUpdate = true;
+	},
+
+	update: function(){
+		//runs when player wins
+		if(game.data.win === true){
+			//adds 10 expeience when player wins
+			game.data.exp += 10;
+			//runs when player loses
+		}else if(game.data.win){
+			//gives player 1 experience
+			game.data.exp += 1;
+		}
+
+		return true;
+	}
+})

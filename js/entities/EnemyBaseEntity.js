@@ -1,4 +1,5 @@
-game.PlayerBaseEntity = me.Entity.extend({
+//tower class
+game.EnemyBaseEntity = me.Entity.extend({
 	init: function(x, y, settings){
 		//reachers the constructor function for tower
 		this._super(me.Entity, 'init', [x, y, {
@@ -20,44 +21,45 @@ game.PlayerBaseEntity = me.Entity.extend({
 		//says that tower hasn't been destroyed
 		this.broken = false;
 		//gives tower a "health" of ten
-		this.health = game.data.playerBaseHealth;
+		this.health = game.data.enemyBaseHealth;
 		//makes sure the tower's status is always updating, eben when it isn't on the map
 		this.alwaysUpdate = true;
-		//makes teh tower collidable
+		//makes the tower collidable
 		this.body.onCollision = this.onCollision.bind(this);
 		//checks what player is running into
-		this.type = "PlayerBase";
+		this.type = "EnemyBaseEntity";
 		//adds the defualt animatin for the game
 		this.renderable.addAnimation("idle", [0]);
 		//adds the animation for when the tower is broken
 		this.renderable.addAnimation("broken", [1]);
-		//sets the desfault animation
+		//sets the default animation
 		this.renderable.setCurrentAnimation("idle");
-
 	},	
 
 
 	update:function(delta){
 		//runs if health is less than or equal to 0
-		if(this.health <= 0){
+		if(this.health<=0){
 			//makes the tower "broken"
 			this.broken = true;
+			//runs when enemy base is broken
+			game.data.win = true;
 			//sets animation for "broken"
 			this.renderable.setCurrentAnimation("broken");
-		} 
+		}
 		//updates tower status
 		this.body.update(delta);
 		//updates
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
-	//runs whenever called on
-	loseHealth: function(damage){
-		//subtracts set damage amount from health everytime ran
-		this.health = this.health - damage;
-	},
 	//function that runs when base is touched
 	onCollision: function(){
+		
+	},
 
+	loseHealth: function(){
+		//makes the tower loose 1 health on each hit
+		this.health--;
 	}
 });

@@ -11,15 +11,20 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.levelDirector.loadLevel("level01");
 		//calls the resetPlayer function with the parameters 0 and 420
 		this.resetPlayer(0, 420);
-		//adds gamemanager to world
+		//adds gameTimermanager to world
 		var gameTimerManager = me.pool.pull("GameTimerManager", 0 , 0, {});
-		//puts gamemanager into world
+		//puts gameTimermanager into world
 		me.game.world.addChild(gameTimeManager, 0);
 
-		//adds gamemanager to world
+		//adds HeroDeathmanager to world
 		var heroDeathManager = me.pool.pull("HeroDeathManager", 0 , 0, {});
-		//puts gamemanager into world
+		//puts HeroDeathmanager into world
 		me.game.world.addChild(heroDeathManager, 0);
+
+		//adds Experiencemanager to world
+		var heroDeathManager = me.pool.pull("ExperienceManager", 0 , 0, {});
+		//puts Experiencemanager into world
+		me.game.world.addChild(experienceManager, 0);
 
 		//Makes the right key into a variable
 		me.input.bindKey(me.input.KEY.RIGHT, "right");

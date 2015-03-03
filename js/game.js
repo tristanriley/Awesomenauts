@@ -18,13 +18,15 @@ var game = {
 		playerMoveSpeed: 8,
 		creepMoveSpeed: 5,
 		gameManager: "",
+		heroDeathManager: "",
 		player: "",
 		exp: 0,
 		gold: 0,
 		exp1: 0,
 		exp2: 0,
 		exp3: 0,
-		exp4: 0
+		exp4: 0,
+		win: ""
 	},
 	
 	
@@ -70,9 +72,11 @@ var game = {
 		//adds friend creep to pool
 		me.pool.register("FriendCreep", game.FriendCreep, true);
 		//registers GameTimeManager
-		me.pool.register("GameTimerManager", game.GameTimeManager
+		me.pool.register("GameTimerManager", game.GameTimeManager);
 		//registers HeroDeathManager
-		me.pool.register("HeroDethManager", game.HeroDeathManager);
+		me.pool.register("heroDethManager", game.heroDeathManager);
+		//registers ExperienceManager
+		me.pool.register("ExperienceManager", game.experienceManager);
 		
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
