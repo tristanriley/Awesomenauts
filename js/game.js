@@ -74,10 +74,10 @@ var game = {
 		me.pool.register("EnemyCreep", game.EnemyCreep, true);
 		//adds friend creep to pool
 		me.pool.register("FriendCreep", game.FriendCreep, true);
-		//registers GameTimeManager
-		me.pool.register("GameTimerManager", game.GameTimeManager);
+		//registers GameTimerManager
+		me.pool.register("GameTimerManager", game.GameTimerManager);
 		//registers HeroDeathManager
-		me.pool.register("heroDethManager", game.heroDeathManager);
+		me.pool.register("HeroDethManager", game.HeroDeathManager);
 		//registers ExperienceManager
 		me.pool.register("ExperienceManager", game.experienceManager);
 		

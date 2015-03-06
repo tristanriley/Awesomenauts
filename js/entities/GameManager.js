@@ -1,5 +1,5 @@
 //class that runs all the timers and occurences that aren't inside any of the other entities
-game.GameTimeManager = Object.extend({
+game.GameTimerManager = Object.extend({
 	//constructor function
 	init: function(x, y, settings){
 		//sets timer
@@ -18,7 +18,7 @@ game.GameTimeManager = Object.extend({
 		
 		this.goldTimerCheck();
 		this.creepTimerCheck();
-
+},
 		
 
 	goldTimerCheck: function(){
