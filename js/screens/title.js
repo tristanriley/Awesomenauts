@@ -39,7 +39,35 @@ game.TitleScreen = me.ScreenObject.extend({
 				me.state.change(me.state.PLAY);
 			}
 		})));
-		
+
+		//for continued game
+		me.game.world.addChild(new (me.Renderable.extend({
+			init: function(){
+				//calls super class 
+				this._super(me.Renderable, 'init', [380, 340, 250, 50]);
+				//sets the font to arial, the size 46, and colors it white
+				this.font = new me.Font("flame", 46, "red");
+				//if the mouse is clicked on the title screen, a new game will start
+				me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
+			},
+			//function that sets up the writing
+			draw: function(renderer){
+				//inserts the message "Awesomenauts!" and sets where writing starts
+				this.font.draw(renderer.getContext(), "CONTINUE!", this.pos.x, this.pos.y);
+			},
+
+			update: function(dt){
+				//makes sure its listening
+				return true;
+			},
+
+			newGame: function(){
+				//gets rid of the mouse as an object
+				me.input.releasePointerEvent('pointerdown', this);
+				//sets screen to play screen
+				me.state.change(me.state.PLAY);
+			}
+		})));
 	},
 	
 	
