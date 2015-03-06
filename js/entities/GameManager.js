@@ -69,17 +69,22 @@ game.HeroDeathManager = Object.extend({
 game.ExperienceManager = object.extend({
 	init: function(x, y, settings){
 		this.alwaysUpdate = true;
+		this.gameOver = false;
 	},
 
 	update: function(){
 		//runs when player wins
-		if(game.data.win === true){
+		if(game.data.win === true && !this.gameOver){
 			//adds 10 expeience when player wins
 			game.data.exp += 10;
+			//ends game
+			this.gameOver = true;
 			//runs when player loses
-		}else if(game.data.win){
+		}else if(game.data.win == false && !this.gameOver){
 			//gives player 1 experience
 			game.data.exp += 1;
+			//ends game
+			this.gameOver = true;
 		}
 
 		return true;
