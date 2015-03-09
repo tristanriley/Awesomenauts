@@ -17,14 +17,14 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.game.world.addChild(gameTimerManager, 0);
 
 		//adds HeroDeathmanager to world
-		var heroDeathManager = me.pool.pull("HeroDeathManager", 0 , 0, {});
+		var HeroDeathManager = me.pool.pull("HeroDeathManager", 0 , 0, {});
 		//puts HeroDeathmanager into world
 		me.game.world.addChild(HeroDeathManager, 0);
 
 		//adds Experiencemanager to world
 		var heroDeathManager = me.pool.pull("ExperienceManager", 0 , 0, {});
 		//puts Experiencemanager into world
-		me.game.world.addChild(experienceManager, 0);
+		me.game.world.addChild(ExperienceManager, 0);
 
 		//Makes the right key into a variable
 		me.input.bindKey(me.input.KEY.RIGHT, "right");

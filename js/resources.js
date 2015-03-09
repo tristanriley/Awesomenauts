@@ -19,6 +19,8 @@ game.resources = [
 
 	//loads the title-screen image from the data folder, allowing it to display it on the map
 	{name: "title-screen", type:"image", src: "data/img/ironclad.jpg"},
+
+	{name: "exp-screen", type:"image", src: "data/img/loadpic.png"},
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
