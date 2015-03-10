@@ -22,7 +22,7 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.game.world.addChild(HeroDeathManager, 0);
 
 		//adds Experiencemanager to world
-		var heroDeathManager = me.pool.pull("ExperienceManager", 0 , 0, {});
+		var ExperienceManager = me.pool.pull("ExperienceManager", 0 , 0, {});
 		//puts Experiencemanager into world
 		me.game.world.addChild(ExperienceManager, 0);
 
@@ -31,7 +31,7 @@ game.PlayScreen = me.ScreenObject.extend({
 		//makes the right key into a variable
 		me.input.bindKey(me.input.KEY.LEFT, "left");
 		//makes the up key into a variable
-		me.input.bindKey(me.input.KEY.SPACE, "jump");
+		me.input.bindKey(me.input.KEY.UP, "jump");
 		//makes an attack key
 		me.input.bindKey(me.input.KEY.A, "attack");
 

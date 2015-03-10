@@ -79,9 +79,9 @@ var game = {
 		//registers GameTimerManager
 		me.pool.register("GameTimerManager", game.GameTimerManager);
 		//registers HeroDeathManager
-		me.pool.register("HeroDethManager", game.HeroDeathManager);
+		me.pool.register("HeroDeathManager", game.HeroDeathManager);
 		//registers ExperienceManager
-		me.pool.register("ExperienceManager", game.experienceManager);
+		me.pool.register("ExperienceManager", game.ExperienceManager);
 		
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
