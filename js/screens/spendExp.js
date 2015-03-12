@@ -11,6 +11,7 @@ game.SpendExp = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.F3, "F3");
 		me.input.bindKey(me.input.KEY.F4, "F4");
 		me.input.bindKey(me.input.KEY.F5, "F5");
+		var exp1cost = ((game.data.exp1 + 1) * 10);
 
 		me.game.world.addChild(new (me.Renderable.extend({
 			init: function(){
@@ -27,7 +28,7 @@ game.SpendExp = me.ScreenObject.extend({
 				//inserts text and sets where writing starts
 				this.font.draw(renderer.getContext(), "Current Exp: " + game.data.exp.toString(), this.pos.x + 100, this.pos.y + 50);
 				//inserts text and sets where writing starts
-				this.font.draw(renderer.getContext(), "F1: Increase Gold Production, Current Level: " + game.data.exp1.toString() + ", Cost: " + ((game.data.exp1 + 1) * 10), this.pos.x, this.pos.y + 100);
+				this.font.draw(renderer.getContext(), "F1: Increase Gold Production, Current Level: " + game.data.exp1.toString() + ", Cost: " + exp1cost, this.pos.x, this.pos.y + 100);
 				//inserts text and sets where writing starts
 				this.font.draw(renderer.getContext(), "F2: Add Starting Gold, Current Level: " + game.data.exp2.toString() + ", Cost: " + ((game.data.exp2 + 1) * 10), this.pos.x, this.pos.y + 150);
 				//inserts text and sets where writing starts
@@ -38,9 +39,17 @@ game.SpendExp = me.ScreenObject.extend({
 
 
 		})));
-
+		//creates hanler for key actions on exp screen
 		this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge){
+			//executes actions when specified key is pressed
 			if(action === "F1"){
+				if(game.data.exp >= exp1cost){
+					game.data.exp1 += 1;
+					game.data.exp -= exp1cost;
+					me.state.change(me.state.PLAY);
+				}else{
+					console.log("not enough experience");
+				}
 
 			}else if(action === "F2"){
 
@@ -56,10 +65,8 @@ game.SpendExp = me.ScreenObject.extend({
 	},		
 
 	
-	
-	/**	
-	 *  action to perform when leaving this screen (state change)
-	 */
+	 //removes F1-F5 keys so that they dont disrupt gameplay
+
 	onDestroyEvent: function() {
 		me.input.unbindKey(me.input.KEY.F1, "F1");
 		me.input.unbindKey(me.input.KEY.F2, "F2");

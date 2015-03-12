@@ -24,7 +24,7 @@ game.GameTimerManager = Object.extend({
 	goldTimerCheck: function(){
 		//checks to make sure there is a multiple of ten. makes sure its been at least a second since last creep has been made
 		if(Math.round(this.now/1000)%20 === 0 && (this.now - this.lastCreep >= 1000)){
-			game.data.gold += 1;
+			game.data.gold += (game.data.exp1 + 1);
 			console.log("Current gold: " + game.data.gold);
 		}
 	},
