@@ -7,7 +7,7 @@ game.GameTimerManager = Object.extend({
 		//keeps track of last time creep was made
 		this.lastCreep = new Date().getTime();
 		//says the game is not paused
-		this.paused = game.data.paused;
+		this.paused = false;
 		//keeps the function updating
 		this.alwaysUpdate = true;
 	},
@@ -101,5 +101,23 @@ game.ExperienceManager = Object.extend({
 		//saves the value of the exp variable
 		me.save.exp = game.data.exp;
 		me.save.exp2 = 4;
+	}
+});
+
+game.SpendGold = Object.extend({
+	init: function(x, y, settings){
+		//sets timer
+		this.now = new Date().getTime();
+		//keeps track of last time creep was made
+		this.lastBuy = new Date().getTime();
+		//says the game is not paused
+		this.paused = false;
+		//keeps the function updating
+		this.alwaysUpdate = true;
+
+	},
+
+	update: function(){
+		return true;
 	}
 });
