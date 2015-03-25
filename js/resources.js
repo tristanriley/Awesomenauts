@@ -23,6 +23,8 @@ game.resources = [
 	//loads gold screen as resource
 	{name: "gold-screen", type:"image", src: "data/img/spend.png"},
 
+	//{name: "gold-screen", type:"image", src: "data/img/shop.jpg"},
+
 	/* Atlases 
 	 * @example
 	 * {name: "example_tps", type: "tps", src: "data/img/example_tps.json"},
