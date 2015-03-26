@@ -189,7 +189,13 @@ game.SpendGold = Object.extend({
 			//function that sets up the writing
 			draw: function(renderer){
 				//inserts the message "Press f1-f4 to buy, f5 to skip" and sets where writing starts
-				this.font.draw(renderer.getContext(), "PRESS F1-F6 TO BUY, P TO EXIT", this.pos.x, this.pos.y);
+				this.font.draw(renderer.getContext(), "Press F1-F6 To Buy, P To Exit. Current Gold: " + game.data.gold, this.pos.x + 5, this.pos.y);
+				this.font.draw(renderer.getContext(), "Skill 1: Increase Damage. Current Level: " + game.data.skill1 + ". Cost " + ((game.data.skill1 + 1) * 10), this.pos.x + 5, this.pos.y + 60);
+				this.font.draw(renderer.getContext(), "Skill 2: Increase Speed. Current Level: " + game.data.skill2 + ". Cost " + ((game.data.skill2 + 1) * 10), this.pos.x + 5, this.pos.y + 120);
+				this.font.draw(renderer.getContext(), "Skill 3: Increase Health. Current Level: " + game.data.skill3 + ". Cost " + ((game.data.skill3 + 1) * 10), this.pos.x + 5, this.pos.y + 180);
+				this.font.draw(renderer.getContext(), "J Ability: Speed Burst. Current Level: " + game.data.ability1 + ". Cost " + ((game.data.ability1 + 1) * 10), this.pos.x + 5, this.pos.y + 240);
+				this.font.draw(renderer.getContext(), "K Ability: Eat Ally Creep For Health. Current Level: " + game.data.ability2 + ". Cost " + ((game.data.ability2 + 1) * 10), this.pos.x + 5, this.pos.y + 300);
+				this.font.draw(renderer.getContext(), "L Ability: Throw Spear. Current Level: " + game.data.ability3 + ". Cost " + ((game.data.ability3 + 1) * 10), this.pos.x + 5, this.pos.y + 360);
 			}
 			
 		}));

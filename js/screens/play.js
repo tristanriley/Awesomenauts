@@ -33,11 +33,11 @@ game.PlayScreen = me.ScreenObject.extend({
 		//makes the B key into a variable
 		me.input.bindKey(me.input.KEY.B, "buy");
 		//makes Q key into the skill1 variable
-		me.input.bindKey(me.input.KEY.Q, "skill");
+		me.input.bindKey(me.input.KEY.Q, "skill1");
 		//makes W key into the skill2 variable
-		me.input.bindKey(me.input.KEY.W, "skill1");
+		me.input.bindKey(me.input.KEY.W, "skill2");
 		//makes E key into the skill3 variable
-		me.input.bindKey(me.input.KEY.E, "skill2");
+		me.input.bindKey(me.input.KEY.E, "skill3");
 		//Makes the right key into a variable
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
 		//makes the right key into a variable
