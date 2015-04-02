@@ -59,7 +59,7 @@ var game = {
 		});
 	}
 	//creates a place to save these 5 variables
-	me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
+	//me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
 
 	console.log(game.data.exp);
 
@@ -69,7 +69,7 @@ var game = {
 	me.state.LOAD = 114;
 
 	// Initialize the audio.
-	me.audio.init("mp3,ogg");
+	//me.audio.init("mp3,ogg");
 
 	// Set a callback to run when loading is complete.
 	me.loader.onload = this.loaded.bind(this);

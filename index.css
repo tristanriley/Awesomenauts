@@ -32,33 +32,19 @@ body {
 	-ms-interpolation-mode: nearest-neighbor;
 }
 
-
-@font-face {
-	font-family: flame; 
-	src: local("flame Condensed"), url('./fonts/flame.TTF');
-	
+/*puts text in center but makes it invisible*/
+#input{
+	display: block;
+	text-align: center;
+	visibility: hidden;
+}
+#load{
+	visibility: hidden;
+}
+#register{
+	visibility: hidden;
 }
 
 @font-face {
 	
-	font-family: halo; 
-	src: local("halo Condensed"), url('./fonts/halo.TTF');
-}
-
-@font-face {
-	
-	font-family: halfelven; 
-	src: local("halfelven Condensed"), url('./fonts/halfelven.TTF');
-}
-
-@font-face {
-	
-	font-family: ENDORALT; 
-	src: local("ENDORALT Condensed"), url('./fonts/ENDORALT.TTF');
-}
-
-@font-face {
-	
-	font-family: Fantasy_Clipart; 
-	src: local("Fantasy_Clipart Condensed"), url('./fonts/Fantasy_Clipart.TTF');
 }

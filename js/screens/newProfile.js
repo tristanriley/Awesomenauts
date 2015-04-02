@@ -4,8 +4,10 @@ game.NewProfile = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {	
 		//inserts the exp-screen image into the map
-		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('new-screen')), -10); // TODO
-
+		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('new-screen')), -10); 
+		//makes the elements with followind ids visible
+		document.getElementById("input").style.visibility = "visible";
+		document.getElementById("register").style.visibility = "visible";
 		//binds keys
 		me.input.unbindKey(me.input.KEY.D);
 		me.input.unbindKey(me.input.KEY.A);
@@ -39,6 +41,10 @@ game.NewProfile = me.ScreenObject.extend({
 	/**	
 	 *  action to perform when leaving this screen (state change)
 	 */
-	onDestroyEvent: function() {}
+	onDestroyEvent: function() {
+		//makes invisble again
+		document.getElementById("input").style.visibility = "hidden";
+		document.getElementById("register").style.visibility = "hidden";
+	}
 
 });

@@ -8,6 +8,7 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
         <link rel="apple-touch-icon" href="icons/touch-icon-iphone-60x60.png">
+
         <link rel="apple-touch-icon" sizes="76x76" href="fonts/touch-icon-ipad-76x76.png">
         <link rel="apple-touch-icon" sizes="120x120" href="icons/touch-icon-iphone-retina-120x120.png">
         <link rel="apple-touch-icon" sizes="152x152" href="icons/touch-icon-ipad-retina-152x152.png">
@@ -15,6 +16,23 @@
 	<body>
 		<!-- Canvas placeholder -->
 		<div id="screen"></div>
+
+		<form id="input" method="post">
+			<!-- makes a text box for username -->
+			<div class="field">
+				<label for="username">Username</label>
+				<input type="text" name="username" id="username" autocomplete = "off">
+			</div>
+			<!-- makes a text box for password -->
+			<div class="password">
+				<label for="password">Password</label>
+				<input type="text" name="password" id="password">
+			</div>
+			<!-- makes buttons -->
+			<button type="button" id="register">Register</button>
+			<button type="button" id="load">Load</button>
+			<button type="button" id="mainmenu">Main Menu</button>
+		</form>
 
 		<!-- melonJS Library -->
 		<!-- build:js js/app.min.js -->
@@ -54,7 +72,6 @@
 		<script type="text/javascript">
 			window.onReady(function onReady() {
 				game.onload();
-
 				// Mobile browser hacks
 				if (me.device.isMobile && !navigator.isCocoonJS) {
 					// Prevent the webview from moving on a swipe
@@ -63,13 +80,11 @@
 						window.scroll(0, 0);
 						return false;
 					}, false);
-
 					// Scroll away mobile GUI
 					(function () {
 						window.scrollTo(0, 1);
 						me.video.onresize(null);
 					}).defer();
-
 					me.event.subscribe(me.event.WINDOW_ONRESIZE, function (e) {
 						window.scrollTo(0, 1);
 					});
