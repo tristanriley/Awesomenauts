@@ -6,12 +6,13 @@ game.TitleScreen = me.ScreenObject.extend({
 		//inserts the title-screen image into the map
 		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('title-screen')), -10); // TODO
 
+		//for new game
 		me.game.world.addChild(new (me.Renderable.extend({
 			init: function(){
 				//calls super class 
 				this._super(me.Renderable, 'init', [300, 540, 300, 50]);
 				//sets the font to arial, the size 46, and colors it white
-				this.font = new me.Font("flame", 46, "red");
+				this.font = new me.Font("arial", 46, "red");
 				//if the mouse is clicked on the title screen, a new game will start
 				me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
 			},
@@ -29,16 +30,8 @@ game.TitleScreen = me.ScreenObject.extend({
 			newGame: function(){
 				//gets rid of the mouse as an object
 				me.input.releasePointerEvent('pointerdown', this);
-				//erases the saved values of the variables
-				me.save.remove('exp');
-				me.save.remove('exp1');
-				me.save.remove('exp2');
-				me.save.remove('exp3');
-				me.save.remove('exp4');
-				//puts exp variables back
-				me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
 				//sets screen to play screen
-				me.state.change(me.state.PLAY);
+				me.state.change(me.state.NEW);
 			}
 		})));
 
@@ -48,7 +41,7 @@ game.TitleScreen = me.ScreenObject.extend({
 				//calls super class 
 				this._super(me.Renderable, 'init', [380, 340, 250, 50]);
 				//sets the font to arial, the size 46, and colors it white
-				this.font = new me.Font("flame", 46, "red");
+				this.font = new me.Font("arial", 46, "red");
 				//if the mouse is clicked on the title screen, a new game will start
 				me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
 			},
@@ -64,18 +57,13 @@ game.TitleScreen = me.ScreenObject.extend({
 			},
 
 			newGame: function(){
-				game.data.exp = me.save.exp;
-				game.data.exp1 = me.save.exp1;
-				game.data.exp2 = me.save.exp2;
-				game.data.exp3 = me.save.exp3;
-				game.data.exp4 = me.save.exp4;
-
 				//gets rid of the mouse as an object
 				me.input.releasePointerEvent('pointerdown', this);
-				//sets screen to play screen
-				me.state.change(me.state.SPENDEXP);
+				//sets screen to exp screen
+				me.state.change(me.state.LOAD);
 			}
 		})));
+		
 	},
 	
 	

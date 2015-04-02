@@ -38,11 +38,11 @@ game.EnemyCreep = me.Entity.extend({
 			//applies the walking animation
 			this.renderable.setCurrentAnimation("walk");
 		},
+
 		//subtracts health from enemy creep
 		loseHealth: function(damage) {
 			this.health = this.health - damage;
 		},
-
 
 		//delta is the change in time that's happening
 		update: function(delta){
@@ -61,6 +61,7 @@ game.EnemyCreep = me.Entity.extend({
 			this._super(me.Entity, "update", [delta]);
 			return true;
 		},
+		
 		//function for creeps' collisions
 		collideHandler: function(response){
 			//runs if creep collides with tower 
@@ -107,3 +108,4 @@ game.EnemyCreep = me.Entity.extend({
 		}
 	
 });
+

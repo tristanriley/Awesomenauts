@@ -27,7 +27,8 @@ game.FriendCreep = me.Entity.extend({
 			//records last time creep attacked anything
 			this.lastAttacking = new Date().getTime();
 			//records last time creep hit anything
-			this.lastHit = new Date().getTime();			//timer for attacking
+			this.lastHit = new Date().getTime();
+			//timer for attacking
 			this.now = new Date().getTime();
 			//sets the creep's horizantal and vertical speed
 			this.body.setVelocity(3, 20);
@@ -58,6 +59,7 @@ game.FriendCreep = me.Entity.extend({
 			this._super(me.Entity, "update", [delta]);
 			return true;
 		},
+
 		//function for creeps' collisions
 		collideHandler: function(response){
 			//runs if creep collides with tower 
@@ -71,7 +73,7 @@ game.FriendCreep = me.Entity.extend({
 				//pushes the creep back a little to maintain its position
 				this.pos.x = this.pos.x - 1;
 				//Only allows the creep to hit the tower once every second
-				if ((this.now - this.lastHit >= game.data.friendCreepAttack)) {
+				if ((this.now - this.lastHit >= game.data.creepAttackTimer)) {
 					//updates the lastHit timer
 					this.lastHit = this.now;
 					//runs the losehealth function, with 1 point damage
@@ -99,9 +101,13 @@ game.FriendCreep = me.Entity.extend({
 					//updates the lastHit timer
 					this.lastHit = this.now;
 					//runs the losehealth function, with 1 point damage
-					response.b.loseHealth(game.data.enemyCreepAttack);
+					response.b.loseHealth(game.data.friendCreepAttack);
 				}
 			}
+
+		}
+
+
 			// else if (response.b.type === 'EnemyCreep') {
 			// 	//see where the player is compared to the creep
 			// 	var xdif = this.pos.x - response.b.pos.x;
@@ -125,6 +131,5 @@ game.FriendCreep = me.Entity.extend({
 			// 		response.b.loseHealth(game.data.friendCreepAttack);
 			// 	}
 			// }
-		}
 	
 });
