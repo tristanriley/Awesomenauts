@@ -1,4 +1,7 @@
 <!DOCTYPE HTML>
+<?php
+	require_once("php/controller/create-db.php");
+?>
 <html>
 	<head>
 		<title>melonJS Template</title>
@@ -8,10 +11,12 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
         <link rel="apple-touch-icon" href="icons/touch-icon-iphone-60x60.png">
-
         <link rel="apple-touch-icon" sizes="76x76" href="fonts/touch-icon-ipad-76x76.png">
         <link rel="apple-touch-icon" sizes="120x120" href="icons/touch-icon-iphone-retina-120x120.png">
         <link rel="apple-touch-icon" sizes="152x152" href="icons/touch-icon-ipad-retina-152x152.png">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 	</head>
 	<body>
 		<!-- Canvas placeholder -->
@@ -89,6 +94,38 @@
 						window.scrollTo(0, 1);
 					});
 				}
+			});
+		</script>
+		<script>
+			//changes screen to MENU when main menu button is pressed
+			$("#mainmenu").bind("click", function(){
+				me.state.change(me.state.MENU);
+			});
+			//saves inputted data
+			$("#register").bind("click", function(){
+				$.ajax({
+					type: "POST",
+					url: "php/controller/create-user.php",
+					data: {
+						username: $('#username').val(),
+						password: $('#password').val()
+					},
+					dataType: "text"
+				})
+				//if it works it goes to play screen
+				.success(function(response){
+					if (response === "true") {
+						me.state.change(me.state.PLAY);
+					}
+					//if response doesnt equal true, says why not
+					else{
+						alert(response);
+					}
+				})
+				//if it doesnt work it says fail
+				.fail(function(response){
+					alert("fail");
+				});
 			});
 		</script>
 	</body>
