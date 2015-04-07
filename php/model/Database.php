@@ -1,88 +1,95 @@
 <?php
-	//a class is an object that can be used whereever it is called
-	class Database{  
-		//the "private" before the variable makes it so that these variables can only be used here
-		private $connection;  
-		//global variables
-		private $host;  
+
+	//this fle will be used for repeated info
+	//shortens code being written
+	//easier to read/maintain
+	
+	class Database {
+		private $connection;
+		//first variable we are creating
+		//only accessible in this file
+
+		private $host;
 		private $username;
 		private $password;
 		private $database;
-		//this variable is public so that we can access it in create-db.php
 		public $error;
-		
-		//allows me to use objects of the Databse class. Defines class. Parameters allow us to use the global variables for this function
-		public function __construct($host, $username, $password, $database){  
-			//accesses the global variable $host
-			$this->host = $host;  
-			//these are local variables
-			$this->username = $username;  
-			//they are deleted when this function is finished.
-			$this->password = $password;  
+		//initiliazing variables similar to above
+		//all are private 
+
+		public function __construct($host, $username, $password, $database) {
+			$this->host = $host; 
+			$this->username = $username;
+			$this->password = $password;
 			$this->database = $database;
+			//accesses the host variable
 
-			//helps connect to Database.php variables by putting them in an object.  this opens the connection.  
-			$this->connection = new mysqli($host, $username, $password); 
-			//runs if there is no connecton to database.php and hte variables aren't getting read
-			if($this->connection->connect_error){ 
-				//eschoes that there is an error
-				die("Error: "  . $this->connection->connect_error); 
+			$this->connection = new mysqli($host, $username, $password);
+			//creates the required mysqli objects
+			//represents connection
+
+			if ($this->connection->connect_error) {
+    			die("Error: " . $connection->connect_error);
 			}
-			
-			//try to access a database that exist on the mysql server. selecting database, whether server will say whether database exists
-			$exists = $this->connection->select_db($database); 
-			//checking whether or not I was able to connect to the database.  Only runs when the database doesn't exist 
+			//if statement to inform us whether the code works
+
+			$exists = $this->connection->select_db($database);
+			//select the database to find existance
+
 			if(!$exists){
-				//php will replace the variable $database with its value "blog_db". creates a query that creates a connection to my server
-				$query = $this->connection->query("CREATE DATABASE $database");  
-				//checks whether $query was true or not												
-				if($query){ 
-					//echoes that the database was created
-					//echo "<p>successfully created database: " . $database . "</p>"; 
+				$query = $this->connection->query("CREATE DATABASE $database");
+				if($query){
+					echo "<p>Succesfully created database " . $database . "</p>";
 				}
-
 			}
-			//runs when database has already been created
-			else{
-				//echoes that the database already exists 
-			//	echo "<p>Database already exists</p>"; 
+			else {
+				echo "<p>Database already exists</p>";
 			}
+			//afer creation, does database exist?
+			//lets us know yes or no
 		}
+		//construct function to be accessed for new obj creation
 
-		//used to hold repetitive code.  specifically the connection opener
-		public function openConnection(){  
-			//accesses the local variables from the construct function
+		public function openConnection() {
 			$this->connection = new mysqli($this->host, $this->username, $this->password, $this->database); 
-			//runs if there is no connecton to database.php and hte variables aren't getting read
-			if($this->connection->connect_error){ 
-				//eschoes that there is an error
-				die("Error: "  . $connection->connect_error); 
-			}
-
-		}
-
-		//input the code into the function and insert the function name where ever the code should go
-		public function closeConnection(){  
-			if(isset($this->connection)){
-				$this->connection->close();
+			//create new mysqli object 
+			
+			if($this->connection->connect_error) {
+    			die("Error: " . $this->connection->connect_error); 
+    			//if statement to inform us whether the code works
 			}
 		}
-		//the query function takes a string of text and uses it to query the database at $query
-		public function query($string){ 
-			//runs the openConnection() function
-			$this->openConnection();
-			//executes a query on the database
-			$query = $this->connection->query($string);  
-			//checks whether or not the query is false, then echoes out what went wrong
-			if(!$query){
-				//connects to the publiv variable "error" to find the source of error
+		//to replace opening connection
+		//opens new object, checks if it works, closes function if fails
+
+		public function closeConnection() {
+			if(isset($this->connection)) {
+				$this->connection->close(); //closes the connection
+			} 
+			//checks whether variable set/not
+			//whether or not something in variable
+		}
+		//to replace closing connection
+
+		public function query($string) /* passing through tstring for query */ {
+			$this->openConnection(); 
+			//code to execute openConnection()
+
+			$query = $this->connection->query($string); //accessing query function
+			//creating/assigning to query
+
+			if(!$query) {
 				$this->error = $this->connection->error;
 			}
+			//check whether query is true/false
 
-			//runs the closeConnection() function
-			$this->closeConnection();  
-			//returns the results of the query
-			return $query; 
+			$this->closeConnection();
+			//closing connection using closeConnection()
+
+			return $query;
+			//returning the result
 		}
-
+		//to replace query code
 	}
+	//the class is being used for its convenience in refactoring our code
+	//if we use the class then each time less code is being written 

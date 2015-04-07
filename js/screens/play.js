@@ -5,65 +5,50 @@ game.PlayScreen = me.ScreenObject.extend({
 	onResetEvent: function() {
 		// reset the score
 		game.data.score = 0;
+		me.levelDirector.loadLevel("level2"); //loading the map
 
+		var gameTimerManager = me.pool.pull("GameTimerManager", 0, 0, {});
+		//incorporates GameTimerManager into play.js
+		me.game.world.addChild(gameTimerManager, 0);
+		//adds it into actual game
 
-		//loads level
-		me.levelDirector.loadLevel("level01");
-		console.log(game.data.exp);
-		console.log(game.data.exp2);
-		//calls the resetPlayer function with the parameters 0 and 420
-		this.resetPlayer(0, 420);
-		//calls the resetPlayer function with the parameters 0 and 420
-		this.resetEnemy(900, 420);
-		//adds HeroDeathmanager to world
-		var heroDeathManager = me.pool.pull("HeroDeathManager", 0 , 0, {});
-		//puts HeroDeathmanager into world
+		var heroDeathManager = me.pool.pull("HeroDeathManager", 0, 0, {});
+		//incorporates HeroDeathManager into play.js
 		me.game.world.addChild(heroDeathManager, 0);
+		//adds it into actual game
 
-		//adds TImemanager to world
-		var gameTimeManager = me.pool.pull("GameTimeManager", 0 , 0, {});
-		//puts Timemanager into world
-		me.game.world.addChild(gameTimeManager, 0);
+		var experienceManager = me.pool.pull("ExperienceManager", 0, 0, {});
+		//incorporates ExperienceManager into play.js
+		me.game.world.addChild(experienceManager, 0);
+		//adds it into actual game
 
-		//adds Experiencemanager to world
-		var ExperienceManager = me.pool.pull("ExperienceManager", 0 , 0, {});
-		//puts Experiencemanager into world
-		me.game.world.addChild(ExperienceManager, 0);
-
-		//adds spendgold to world
-		var spendGold = me.pool.pull("SpendGold", 0 , 0, {});
-		//puts gamemanager into world
+		var spendGold = me.pool.pull("SpendGold", 0, 0, {});
+		//incorporates SpendGold into play.js
 		me.game.world.addChild(spendGold, 0);
+		//adds it into actual game
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//enemy hero hack
+		game.data.minimap = me.pool.pull("minimap", 10, 10, {});
+		//adds minimap entity into the pool from game.js
+		me.game.world.addChild(game.data.minimap, 30);
+		//adds minimap to the "world"
 
-		//makes the D key into a variable
-		me.input.bindKey(me.input.KEY.D, "right");
-		//makes the A key into a variable
-		me.input.bindKey(me.input.KEY.A, "left");
-		//makes the W key into a variable
-		me.input.bindKey(me.input.KEY.W, "jump");
-		//makes an attack key
-		me.input.bindKey(me.input.KEY.V, "attack");
-		//Makes the right key into a variable
-		me.input.bindKey(me.input.KEY.RIGHT, "rights");
-		//makes the right key into a variable
-		me.input.bindKey(me.input.KEY.LEFT, "lefts");
-		//makes the up key into a variable
-		me.input.bindKey(me.input.KEY.UP, "jumps");
-		//makes space an attack key
-		me.input.bindKey(me.input.KEY.SPACE, "attacks");
-		//pause/gold screen button
-		me.input.bindKey(me.input.KEY.P, "pause");
-		//special skill button
-		me.input.bindKey(me.input.KEY.E, "skill1");
-		//special skill button
-		me.input.bindKey(me.input.KEY.R, "skill2");
-		me.input.bindKey(me.input.KEY.F, "skill3");
-
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+		this.resetPlayer(0, 10);
+		//reset or respawn the player
+		me.input.bindKey(me.input.KEY.B, "buy");
+		//binds b to buy stuff in spend gold
+		me.input.bindKey(me.input.KEY.Q, "skill1");
+		//binds q for skill 1 select?
+		me.input.bindKey(me.input.KEY.W, "skill2");
+		//binds w for skill 2 select?
+		me.input.bindKey(me.input.KEY.E, "skill3");
+		//binds e for skill 3 select?
+		me.input.bindKey(me.input.KEY.RIGHT, "right");
+		//binding right to be able to perform action
+		me.input.bindKey(me.input.KEY.LEFT, "left");
+		//binding left to be able to perform action
+		me.input.bindKey(me.input.KEY.Z, "attack");
+		//binding a key for attacking w/ player
+		me.input.bindKey(me.input.KEY.SPACE, "jump");
 
 		// add our HUD to the game world
 		this.HUD = new game.HUD.Container();
@@ -79,37 +64,15 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.game.world.removeChild(this.HUD);
 	},
 
-	//adds player to map
-	resetPlayer: function(x, y){
-		//pulls the player entity from the pool
-		game.data.player = me.pool.pull("player", x, y, {});
-		//adds him to the game and sets his layer-level
-		me.game.world.addChild(game.data.player, 5);
-	},
-
-	resetEnemy: function(x, y){
-		//pulls the player entity from the pool
-		game.data.enemyHero = me.pool.pull("enemyHero", x, y, {});
-		//adds him to the game and sets his layer-level
-		me.game.world.addChild(game.data.enemyHero, 5);
-	},
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//pause hack
-	// pausedGame: function(){
-	// 	if (game.data.paused === true) {
-	// 		me.state.change(me.state.PAUSE);
-	// 	}
-	// }
-	//pauseGame: function(){
-		// this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge){
-		// 		//runs if enter button is pressed
-		// 		if (action === "pause") {
-		// 			//goes to play screen
-		// 			me.state.change(me.state.PAUSE);
-		// 		}
-		// });
-		//me.state.change(me.state.PAUSE);
-	//}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	resetPlayer: function(x, y) {
+		game.data.player = me.pool.pull("player", x, y, {}); 
+		//player recreate from game.js
+		me.game.world.addChild(game.data.player, 7); 
+		//adding into "world"
+		game.data.miniPlayer = me.pool.pull("miniplayer", 10, 10, {}); 
+		//player recreate from game.js
+		me.game.world.addChild(game.data.miniPlayer, 31); 
+		//adding into "world"
+	}
+	//reset player function
 });

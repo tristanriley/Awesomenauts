@@ -1,23 +1,28 @@
-<?php
+<?php 
 
 	require_once(__DIR__ . "/../model/config.php");
-	//pass variables from game to database
+	//tells where we are
+
 	$exp = filter_input(INPUT_POST, "exp", FILTER_SANITIZE_STRING);
 	$exp1 = filter_input(INPUT_POST, "exp1", FILTER_SANITIZE_STRING);
 	$exp2 = filter_input(INPUT_POST, "exp2", FILTER_SANITIZE_STRING);
 	$exp3 = filter_input(INPUT_POST, "exp3", FILTER_SANITIZE_STRING);
 	$exp4 = filter_input(INPUT_POST, "exp4", FILTER_SANITIZE_STRING);
-	//insert variables into user account table
-	$query = $_SESSION["connection"]->("UPDATE users SET " 
+	//exp vars passed from game to here
+
+	$query = $_SESSION["connection"]->query("UPDATE users SET "
 		. "exp = $exp, "
 		. "exp1 = $exp1, "
 		. "exp2 = $exp2, "
 		. "exp3 = $exp3, "
-		. "exp4 = $exp4 WHERE username =  \ "" . $_SESSION["$name"] . " \ "");
+		. "exp4 = $exp4 WHERE username = \"" . $_SESSION["name"] . "\""); 
+	//user table is updated on user account
 
-	if ($query) {
+	if(query) {
 		echo "true";
-	}
-	else{
-		echo $_SESSION["connection"]->error;
-	}
+	} //if successful echo true
+	else {
+		echo "<p>" . $_SESSION["connection"]->error . "</p>";
+	} //if not explain error
+
+?>

@@ -1,25 +1,31 @@
 <?php
 
 	require_once(__DIR__ . "/Database.php");
-	//starts the session
+	//require once for database
 	session_start();
-	//prevents hackers from using previusly authenticated users to access the website
+	//use for session var $connection
 	session_regenerate_id(true);
 
-	//displays the post page
-	$path = "/Awesomnauts/php"; 
-	//a variable that stores the string "localhost"
-	$host = "localhost"; 
-	//a variable that stores the string "root" 			//database.php contnents now integrated into config.php file
-	$username = "root"; 
-	//a variable that stores the string "root"
-	$password = "root"; 
-	//a variable that stores the string "blog_db"
-	$database = "awesomnauts_db";
+	$path = "/Awesomenauts/php";
+	//used for fixing path for future changes changed
 
-	//checks if the session variable exists.  if it doesn't, the connection gets created
-	if(!isset($_SESSION["connection"])){
+	//former db code
+	$host = "localhost"; //local host variables
+	$username = "root"; //username variable
+	$password = "root"; //password variables
+	$database = "awesomenauts_db"; //database variable changed
+	//initalizing required variables for database
+
+	if(!isset($_SESSION["connection"])) { /* want to determine if var has value */
+		echo "sessionstart";
+		
+		//need to create new database object based on class
 		$connection = new Database($host, $username, $password, $database);
-		//session variable.  saves database object so that it only gets created once
+		//passing variables
+		//going to help query database
+
 		$_SESSION["connection"] = $connection;
+		//assigning connection var to session var
 	}
+
+?>

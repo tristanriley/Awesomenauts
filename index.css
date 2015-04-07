@@ -32,19 +32,16 @@ body {
 	-ms-interpolation-mode: nearest-neighbor;
 }
 
-/*puts text in center but makes it invisible*/
-#input{
+#input {
 	display: block;
 	text-align: center;
 	visibility: hidden;
 }
-#load{
-	visibility: hidden;
-}
-#register{
+
+#load {
 	visibility: hidden;
 }
 
-@font-face {
-	
+#register {
+	visibility: hidden;
 }
