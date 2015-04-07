@@ -10,7 +10,7 @@ game.TitleScreen = me.ScreenObject.extend({
 			init: function() {
 				this._super(me.Renderable, 'init', [270, 240, 300, 50]);
 				//basic settings for the title screen
-				this.font = new me.Font("Arial", 46, "white");
+				this.font = new me.Font("Arial", 46, "red");
 				//font used in title
 				me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
 				//handles being able to click on start

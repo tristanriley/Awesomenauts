@@ -29,13 +29,13 @@ game.SpendExp = me.ScreenObject.extend({
 				//draws current exp text
 				this.font.draw(renderer.getContext(), "F1: Gold ability yor CURRENT LEVEL: " + game.data.exp1.toString() + 
 				" COST: " + exp1cost, this.pos.x, this.pos.y + 150);
-				//draws option 1, gold ability if have enough
-				this.font.draw(renderer.getContext(), "F2: fight ability your CURRENT LEVEL: " + game.data.exp2.toString() +
+				//option 1, gold ability if have enough
+				this.font.draw(renderer.getContext(), "F2: Speed ability your CURRENT LEVEL: " + game.data.exp2.toString() +
 				" COST: " + exp2cost, this.pos.x, this.pos.y + 200);
-				//draws option 2, , zfight ability if have enough
-				this.font.draw(renderer.getContext(), "F3: war ability your CURRENT LEVEL: " + game.data.exp3.toString() +
+				//option 2, , speed ability if have enough
+				this.font.draw(renderer.getContext(), "F3: Bezerker ability your CURRENT LEVEL: " + game.data.exp3.toString() +
 				" COST: " + exp3cost, this.pos.x, this.pos.y + 250);
-				//draws option 3, war to finish ...
+				//option 3 bezerker ability
 			},
 			//used as main function to draw on screen
 		})));
