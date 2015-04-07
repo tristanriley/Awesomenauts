@@ -24,10 +24,10 @@ var game = {
 		gloopMoveSpeed: 5, //speed of creep
 		gameTimerManager: "", //global var game manager
 		heroDeathManager: "", //global var death manager
-		spearTimer: 15000,
+		spearTimer: 10000,
 		player: "",
 		exp: 0, //experience var number
-		gold: 10, //number of gold player has
+		gold: 20, //number of gold player has
 		//added vars for cost of things in buyscreen
 		skill1: 0,
 		skill2: 0,
