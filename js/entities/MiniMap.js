@@ -3,9 +3,9 @@ game.MiniMap = me.Entity.extend({
 		this._super(me.Entity, "init", [x, y, {
 			image: "minimap", //gets minimap img for entity
 			width: 421, //width of minimap entity
-			height: 136, //height of minimap entity
+			height: 135, //height of minimap entity
 			spritewidth: "421", //same as width
-			spriteheight: "136", //same as height
+			spriteheight: "135", //same as height
 			getShape: function() {
 				return (new me.Rect(0, 0, 384, 122)).toPolygon();
 			}
